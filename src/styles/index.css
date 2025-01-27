@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  @apply bg-slate-100;
+  @apply tracking-wide;
+  @apply text-gray-900;
+}
+
+@layer base {
+  thead,
+  th,
+  tr,
+  td {
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    border: 1px solid #d1d5db;
+    text-align: center;
+  }
+
+  thead {
+    background-color: #e5e7eb;
+  }
+}
