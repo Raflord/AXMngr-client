@@ -1,15 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-
-interface LoadRecord {
-  id: string;
-  material: string;
-  average_weight: number;
-  unit: string;
-  createdAt: Date;
-  updatedAt: Date;
-  operator: string;
-  shift: string;
-}
+import { DaySum, InputData, LoadRecord } from "../types/types";
 
 export const fetchLatest = async (): Promise<LoadRecord[]> => {
   const response: AxiosResponse<LoadRecord[]> = await axios.get<LoadRecord[]>(
@@ -23,4 +13,23 @@ export const fetchLatest = async (): Promise<LoadRecord[]> => {
   }));
 
   return returnData ?? null;
+};
+
+export const fetchDay = async (): Promise<DaySum[]> => {
+  const response: AxiosResponse<DaySum[]> = await axios.get<DaySum[]>(
+    "http://127.0.0.1:8080/api/cellulose/day"
+  );
+
+  return response.data ?? null;
+};
+
+export const createNewRecord = async (
+  inputData: InputData
+): Promise<InputData> => {
+  const response = await axios.post(
+    "http://127.0.0.1:8080/api/cellulose",
+    inputData
+  );
+
+  return response.data;
 };

@@ -2,8 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { fetchLatest } from "../api/api";
+import { createNewRecord, fetchDay, fetchLatest } from "../api/api";
 import Header from "../components/header";
+import { InputData } from "../types/types";
 
 const CELLULOSE_TYPE = [
   "Fibra Longa Klabin",
@@ -37,6 +38,28 @@ function Cellulose() {
     },
   });
 
+  const { data: getDayData } = useQuery({
+    queryKey: ["getDay"],
+    queryFn: async () => {
+      return await fetchDay();
+    },
+  });
+
+  const { mutate: createRecord } = useMutation({
+    mutationKey: ["createRecord"],
+    mutationFn: async (inputData: InputData) => {
+      return await createNewRecord(inputData);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["getLatest"] });
+    },
+    onError: (error) => {
+      alert(
+        `Erro ao registrar carga! Por favor tente novamente.\nErro: ${error.message}`
+      );
+    },
+  });
+
   // form utils
   const {
     register,
@@ -50,23 +73,20 @@ function Cellulose() {
       return;
     }
 
-    const loadData = {
+    const inputData = {
       material: data.celluloseType.toLowerCase(),
       average_weight: 3000,
       unit: "KG",
-      record_date: new Date(Date.now()),
       operator: data.operator.toLowerCase(),
       shift: data.shift,
     };
 
-    // createRecord(loadData);
+    createRecord(inputData);
 
     setValue("celluloseType", data.celluloseType);
     setValue("operator", data.operator);
     setValue("shift", data.shift);
   };
-
-  console.log(getLatestData);
 
   return (
     <>
@@ -168,7 +188,7 @@ function Cellulose() {
           </span>
         ) : (
           <table className="my-6 block overflow-x-auto md:table">
-            {/* <caption className="mb-2 text-left">
+            <caption className="mb-2 text-left">
               Total do dia
               <span className="font-bold">
                 {" "}
@@ -179,12 +199,12 @@ function Cellulose() {
                   <span key={record.material} className="block capitalize">
                     {record.material}:{" "}
                     <span className="font-bold">
-                      {record.totalLoad?.toLocaleString()} KG
+                      {record.total_weight?.toLocaleString()} KG
                     </span>
                   </span>
                 );
               })}
-            </caption> */}
+            </caption>
             <thead>
               <tr>
                 <th>Material</th>
