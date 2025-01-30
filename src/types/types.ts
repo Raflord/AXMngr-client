@@ -25,6 +25,13 @@ const inputData = z.object({
   shift: z.string().optional(),
 });
 
+const inputFiltered = z.object({
+  material: z.string().nullable(),
+  first_date: z.date().nullable(),
+  seccond_date: z.date().nullable(),
+});
+
 export type LoadRecord = z.infer<typeof loadRecord>;
 export type DaySum = z.infer<typeof daySum>;
 export type InputData = z.infer<typeof inputData>;
+export type InputFiltered = z.infer<typeof inputFiltered>;
