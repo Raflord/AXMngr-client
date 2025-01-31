@@ -52,6 +52,7 @@ function Cellulose() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["getLatest"] });
+      void queryClient.invalidateQueries({ queryKey: ["getDay"] });
     },
     onError: (error) => {
       alert(
