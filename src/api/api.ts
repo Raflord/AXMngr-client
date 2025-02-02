@@ -3,7 +3,7 @@ import { DaySum, InputData, InputFiltered, LoadRecord } from "../types/types";
 
 export const fetchLatest = async (): Promise<LoadRecord[]> => {
   const response: AxiosResponse<LoadRecord[]> = await axios.get<LoadRecord[]>(
-    "http://127.0.0.1:8080/api/cellulose/latest"
+    `${import.meta.env.VITE_API_URL}/api/cellulose/latest`
   );
 
   const returnData = response.data.map((record) => ({
@@ -17,7 +17,7 @@ export const fetchLatest = async (): Promise<LoadRecord[]> => {
 
 export const fetchDay = async (): Promise<DaySum[]> => {
   const response: AxiosResponse<DaySum[]> = await axios.get<DaySum[]>(
-    "http://127.0.0.1:8080/api/cellulose/day"
+    `${import.meta.env.VITE_API_URL}/api/cellulose/day`
   );
 
   return response.data ?? null;
@@ -27,7 +27,7 @@ export const fetchFiltered = async (
   inputData: InputFiltered | undefined
 ): Promise<LoadRecord[]> => {
   const response: AxiosResponse<LoadRecord[]> = await axios.post<LoadRecord[]>(
-    "http://127.0.0.1:8080/api/cellulose/filtered",
+    `${import.meta.env.VITE_API_URL}/api/cellulose/filtered`,
     inputData
   );
 
@@ -44,7 +44,7 @@ export const createNewRecord = async (
   inputData: InputData
 ): Promise<InputData> => {
   const response = await axios.post(
-    "http://127.0.0.1:8080/api/cellulose",
+    `${import.meta.env.VITE_API_URL}/api/cellulose`,
     inputData
   );
 
