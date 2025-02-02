@@ -1,29 +1,40 @@
-# Use a Node.js base image for building
-FROM node:18-alpine AS builder
+# Use the Node alpine official image
+# https://hub.docker.com/_/node
+FROM node:lts-alpine AS build
 
-# Set working directory inside the container
+# Set config
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+ENV NPM_CONFIG_FUND=false
+
+# Create and change to the app directory.
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock) to install dependencies
-COPY package.json package-lock.json ./
+# Copy the files to the container image
+COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install packages
+RUN npm ci
 
-# Copy the rest of the application
-COPY . .
+# Copy local code to the container image.
+COPY . ./
 
-# Build the application
+# Build the app.
 RUN npm run build
 
-# Use a lightweight web server to serve the built app
-FROM nginx:alpine
+# Use the Caddy image
+FROM caddy
 
-# Copy built files from builder stage to Nginx's default static directory
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Create and change to the app directory.
+WORKDIR /app
 
-# Expose the default Nginx port
-EXPOSE 80
+# Copy Caddyfile to the container image.
+COPY Caddyfile ./
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Copy local code to the container image.
+RUN caddy fmt Caddyfile --overwrite
+
+# Copy files to the container image.
+COPY --from=build /app/dist ./dist
+
+# Use Caddy to run/serve the app
+CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
