@@ -29,7 +29,8 @@ export const fetchFiltered = async (
   inputData: InputFiltered | undefined
 ): Promise<LoadRecord[]> => {
   const response: AxiosResponse<LoadRecord[]> = await axios.post<LoadRecord[]>(
-    `https://almox-manager-backend-development.up.railway.app/api/cellulose/filtered`,
+    // `https://almox-manager-backend-development.up.railway.app/api/cellulose/filtered`,
+    `/api/cellulose/filtered`,
     inputData
   );
 
