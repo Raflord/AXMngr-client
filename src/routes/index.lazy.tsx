@@ -2,6 +2,7 @@ import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import boPaperLogo from "./../assets/logos-horizontal.png";
 
 function Index() {
+  console.log(import.meta.env.VITE_API_URL);
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300">
