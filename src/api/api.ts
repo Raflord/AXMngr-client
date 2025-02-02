@@ -1,11 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { DaySum, InputData, InputFiltered, LoadRecord } from "../types/types";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 export const fetchLatest = async (): Promise<LoadRecord[]> => {
   const response: AxiosResponse<LoadRecord[]> = await axios.get<LoadRecord[]>(
-    `${API_URL}/api/cellulose/latest`
+    `${import.meta.env.VITE_API_URL}/api/cellulose/latest`
   );
 
   const returnData = response.data.map((record) => ({
@@ -19,7 +17,7 @@ export const fetchLatest = async (): Promise<LoadRecord[]> => {
 
 export const fetchDay = async (): Promise<DaySum[]> => {
   const response: AxiosResponse<DaySum[]> = await axios.get<DaySum[]>(
-    `${API_URL}/api/cellulose/day`
+    `${import.meta.env.VITE_API_URL}/api/cellulose/day`
   );
 
   return response.data ?? null;
@@ -30,7 +28,7 @@ export const fetchFiltered = async (
 ): Promise<LoadRecord[]> => {
   const response: AxiosResponse<LoadRecord[]> = await axios.post<LoadRecord[]>(
     // `https://almox-manager-backend-development.up.railway.app/api/cellulose/filtered`,
-    `/api/cellulose/filtered`,
+    `${import.meta.env.VITE_API_URL}/api/cellulose/filtered`,
     inputData
   );
 
@@ -46,7 +44,10 @@ export const fetchFiltered = async (
 export const createNewRecord = async (
   inputData: InputData
 ): Promise<InputData> => {
-  const response = await axios.post(`${API_URL}/api/cellulose`, inputData);
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/cellulose`,
+    inputData
+  );
 
   return response.data;
 };
