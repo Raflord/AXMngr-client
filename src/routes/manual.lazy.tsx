@@ -19,6 +19,7 @@ const SHIFTS = ["A", "B", "C", "D", "E", "ADM"] as const;
 const formSchema = z.object({
   operator: z.enum(OPERATORS),
   shift: z.enum(SHIFTS),
+  createdAt: z.date(),
   celluloseType: z.enum(CELLULOSE_TYPE),
 });
 
@@ -77,6 +78,7 @@ function Cellulose() {
       material: data.celluloseType.toLowerCase(),
       average_weight: 3000,
       unit: "KG",
+      createdAt: new Date(data.createdAt),
       operator: data.operator.toLowerCase(),
       shift: data.shift,
     };
@@ -141,6 +143,24 @@ function Cellulose() {
                   {errors.shift.message}
                 </span>
               )}
+            </fieldset>
+            <fieldset className="mt-2">
+              <div className="flex max-w-fit flex-col gap-x-8 sm:flex-row sm:items-end">
+                <div>
+                  <label
+                    htmlFor="recordDate"
+                    className="mb-2 block text-xl font-medium"
+                  >
+                    Data/Hora da carga
+                  </label>
+                  <input
+                    {...register("createdAt")}
+                    id="recordDate"
+                    type="datetime-local"
+                    className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 focus:border-yellow-500 focus:ring-yellow-500"
+                  />
+                </div>
+              </div>
             </fieldset>
           </div>
           <fieldset className="mt-4 rounded border border-gray-500 px-6 py-4">
@@ -239,6 +259,6 @@ function Cellulose() {
   );
 }
 
-export const Route = createLazyFileRoute("/cellulose")({
+export const Route = createLazyFileRoute("/manual")({
   component: Cellulose,
 });

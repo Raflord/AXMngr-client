@@ -17,12 +17,11 @@ const daySum = z.object({
 });
 
 const inputData = z.object({
-  material: z.string().optional(),
+  material: z.string(),
   average_weight: z.number(),
   createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
-  operator: z.string().optional(),
-  shift: z.string().optional(),
+  operator: z.string(),
+  shift: z.string(),
 });
 
 const inputFiltered = z.object({

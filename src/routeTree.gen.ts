@@ -17,6 +17,7 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const ReportLazyImport = createFileRoute('/report')()
+const ManualLazyImport = createFileRoute('/manual')()
 const CelluloseLazyImport = createFileRoute('/cellulose')()
 const IndexLazyImport = createFileRoute('/')()
 
@@ -27,6 +28,12 @@ const ReportLazyRoute = ReportLazyImport.update({
   path: '/report',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/report.lazy').then((d) => d.Route))
+
+const ManualLazyRoute = ManualLazyImport.update({
+  id: '/manual',
+  path: '/manual',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/manual.lazy').then((d) => d.Route))
 
 const CelluloseLazyRoute = CelluloseLazyImport.update({
   id: '/cellulose',
@@ -58,6 +65,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CelluloseLazyImport
       parentRoute: typeof rootRoute
     }
+    '/manual': {
+      id: '/manual'
+      path: '/manual'
+      fullPath: '/manual'
+      preLoaderRoute: typeof ManualLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/report': {
       id: '/report'
       path: '/report'
@@ -73,12 +87,14 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/cellulose': typeof CelluloseLazyRoute
+  '/manual': typeof ManualLazyRoute
   '/report': typeof ReportLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/cellulose': typeof CelluloseLazyRoute
+  '/manual': typeof ManualLazyRoute
   '/report': typeof ReportLazyRoute
 }
 
@@ -86,27 +102,30 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/cellulose': typeof CelluloseLazyRoute
+  '/manual': typeof ManualLazyRoute
   '/report': typeof ReportLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cellulose' | '/report'
+  fullPaths: '/' | '/cellulose' | '/manual' | '/report'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cellulose' | '/report'
-  id: '__root__' | '/' | '/cellulose' | '/report'
+  to: '/' | '/cellulose' | '/manual' | '/report'
+  id: '__root__' | '/' | '/cellulose' | '/manual' | '/report'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   CelluloseLazyRoute: typeof CelluloseLazyRoute
+  ManualLazyRoute: typeof ManualLazyRoute
   ReportLazyRoute: typeof ReportLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   CelluloseLazyRoute: CelluloseLazyRoute,
+  ManualLazyRoute: ManualLazyRoute,
   ReportLazyRoute: ReportLazyRoute,
 }
 
@@ -122,6 +141,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/cellulose",
+        "/manual",
         "/report"
       ]
     },
@@ -130,6 +150,9 @@ export const routeTree = rootRoute
     },
     "/cellulose": {
       "filePath": "cellulose.lazy.tsx"
+    },
+    "/manual": {
+      "filePath": "manual.lazy.tsx"
     },
     "/report": {
       "filePath": "report.lazy.tsx"
