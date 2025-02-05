@@ -51,3 +51,12 @@ export const createNewRecord = async (
 
   return response.data;
 };
+
+export const DeleteRecord = async (inputData: { id: string }) => {
+  const response = await axios.put(
+    `${import.meta.env.VITE_API_URL}/api/cellulose`,
+    inputData
+  );
+
+  return response.data;
+};

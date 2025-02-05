@@ -17,6 +17,7 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const ReportLazyImport = createFileRoute('/report')()
+const RemoveLazyImport = createFileRoute('/remove')()
 const ManualLazyImport = createFileRoute('/manual')()
 const CelluloseLazyImport = createFileRoute('/cellulose')()
 const IndexLazyImport = createFileRoute('/')()
@@ -28,6 +29,12 @@ const ReportLazyRoute = ReportLazyImport.update({
   path: '/report',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/report.lazy').then((d) => d.Route))
+
+const RemoveLazyRoute = RemoveLazyImport.update({
+  id: '/remove',
+  path: '/remove',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/remove.lazy').then((d) => d.Route))
 
 const ManualLazyRoute = ManualLazyImport.update({
   id: '/manual',
@@ -72,6 +79,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManualLazyImport
       parentRoute: typeof rootRoute
     }
+    '/remove': {
+      id: '/remove'
+      path: '/remove'
+      fullPath: '/remove'
+      preLoaderRoute: typeof RemoveLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/report': {
       id: '/report'
       path: '/report'
@@ -88,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/cellulose': typeof CelluloseLazyRoute
   '/manual': typeof ManualLazyRoute
+  '/remove': typeof RemoveLazyRoute
   '/report': typeof ReportLazyRoute
 }
 
@@ -95,6 +110,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/cellulose': typeof CelluloseLazyRoute
   '/manual': typeof ManualLazyRoute
+  '/remove': typeof RemoveLazyRoute
   '/report': typeof ReportLazyRoute
 }
 
@@ -103,15 +119,16 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/cellulose': typeof CelluloseLazyRoute
   '/manual': typeof ManualLazyRoute
+  '/remove': typeof RemoveLazyRoute
   '/report': typeof ReportLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cellulose' | '/manual' | '/report'
+  fullPaths: '/' | '/cellulose' | '/manual' | '/remove' | '/report'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cellulose' | '/manual' | '/report'
-  id: '__root__' | '/' | '/cellulose' | '/manual' | '/report'
+  to: '/' | '/cellulose' | '/manual' | '/remove' | '/report'
+  id: '__root__' | '/' | '/cellulose' | '/manual' | '/remove' | '/report'
   fileRoutesById: FileRoutesById
 }
 
@@ -119,6 +136,7 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   CelluloseLazyRoute: typeof CelluloseLazyRoute
   ManualLazyRoute: typeof ManualLazyRoute
+  RemoveLazyRoute: typeof RemoveLazyRoute
   ReportLazyRoute: typeof ReportLazyRoute
 }
 
@@ -126,6 +144,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   CelluloseLazyRoute: CelluloseLazyRoute,
   ManualLazyRoute: ManualLazyRoute,
+  RemoveLazyRoute: RemoveLazyRoute,
   ReportLazyRoute: ReportLazyRoute,
 }
 
@@ -142,6 +161,7 @@ export const routeTree = rootRoute
         "/",
         "/cellulose",
         "/manual",
+        "/remove",
         "/report"
       ]
     },
@@ -153,6 +173,9 @@ export const routeTree = rootRoute
     },
     "/manual": {
       "filePath": "manual.lazy.tsx"
+    },
+    "/remove": {
+      "filePath": "remove.lazy.tsx"
     },
     "/report": {
       "filePath": "report.lazy.tsx"
