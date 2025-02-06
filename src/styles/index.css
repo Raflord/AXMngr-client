@@ -1,11 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
+@import "tailwindcss";
 
-html {
-  @apply bg-slate-100;
-  @apply tracking-wide;
-  @apply text-gray-900;
+@theme {
+  --font-geist: Geist, sans-serif;
+}
+
+@layer utilities {
+  html {
+    @apply bg-slate-100;
+    @apply tracking-wider;
+    @apply text-gray-900;
+    @apply font-geist;
+  }
 }
 
 @layer base {

@@ -4,7 +4,7 @@ import boPaperLogo from "./../assets/logos-horizontal.png";
 function Index() {
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-gray-100 to-gray-300">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <img src={boPaperLogo} alt="Logo BO Paper" />
           <h1 className="text-5xl font-extrabold tracking-tight text-gray-800 sm:text-[5rem]">

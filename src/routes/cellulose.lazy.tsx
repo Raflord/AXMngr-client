@@ -143,7 +143,7 @@ function Cellulose() {
               )}
             </fieldset>
           </div>
-          <fieldset className="mt-4 rounded border border-gray-500 px-6 py-4">
+          <fieldset className="mt-4 rounded-sm border border-gray-500 px-6 py-4">
             <legend className="text-xl">Selecione o tipo de celulose</legend>
             <div className="grid grid-cols-3 justify-between gap-2">
               {CELLULOSE_TYPE.map((data) => {
@@ -172,7 +172,7 @@ function Cellulose() {
           )}
           <button
             type="submit"
-            className="mb-6 me-2 mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            className="mb-6 me-2 mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300"
           >
             Registrar carga
           </button>

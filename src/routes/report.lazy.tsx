@@ -120,7 +120,7 @@ function Report() {
             <button
               disabled
               type="button"
-              className="mb-8 mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              className="mb-8 mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300"
             >
               <svg
                 aria-hidden="true"
@@ -142,13 +142,13 @@ function Report() {
               Buscando...
             </button>
           ) : isErrorFiltered ? (
-            <button className="mb-2 mt-4 max-w-80 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-yellow-300">
+            <button className="mb-2 mt-4 max-w-80 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300">
               {errorFiltered.message}
             </button>
           ) : (
             <button
               type="submit"
-              className="mb-8 mt-4 max-w-28 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              className="mb-8 mt-4 max-w-28 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300"
             >
               Buscar
             </button>
@@ -175,7 +175,7 @@ function Report() {
             writeFile(workbook, "export.xlsx", { compression: true });
           }}
           type="button"
-          className="me-2 inline-flex max-w-fit items-center rounded-full bg-green-700 p-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
+          className="me-2 inline-flex max-w-fit items-center rounded-full bg-green-700 p-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-4 focus:ring-blue-300"
         >
           <svg
             className="h-5 w-5 text-white"
