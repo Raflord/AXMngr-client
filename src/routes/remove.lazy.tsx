@@ -244,6 +244,7 @@ function Remove() {
                       onClick={() => {
                         deleteRecord({ id: record.id });
                       }}
+                      className="hover:cursor-pointer"
                     >
                       <svg
                         className="h-6 w-6 text-red-600"

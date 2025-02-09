@@ -13,8 +13,14 @@ const CELLULOSE_TYPE = [
   "Fibra Longa Mercer",
   "Fibra Longa Rottneros",
 ] as const;
-const OPERATORS = ["Rafael Wrobel", "Wagner Lima"] as const;
-const SHIFTS = ["A", "B", "C", "D", "E", "ADM"] as const;
+const OPERATORS = [
+  "Aldo Vitorino da Silva",
+  "Carlos Eduardo Aparecido Stetiski Dutra",
+  "Felipe Rodrigues",
+  "Luciano Hattanda Sugiyama",
+  "Saimon de Matos Leandro",
+] as const;
+const SHIFTS = ["A", "B", "C", "D", "E"] as const;
 
 const formSchema = z.object({
   operator: z.enum(OPERATORS),
@@ -206,7 +212,7 @@ function Cellulose() {
                   })}
                 </div>
                 <button
-                  className="p-1 bg-black max-w-fit max-h-fit rounded-full"
+                  className="hover:cursor-pointer p-1 bg-black max-w-fit max-h-fit rounded-full"
                   onClick={() => {
                     queryClient.invalidateQueries({
                       queryKey: ["getLatest"],
