@@ -1,14 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { utils, writeFile } from "xlsx";
 import { z } from "zod";
-import { fetchFiltered } from "../api/api";
-import Header from "../components/header";
-import { InputFiltered } from "../types/types";
+import Header from "../../components/header";
+import {
+  useDeleteLoad,
+  useGetFiltered,
+} from "../../features/celulose/api/celulose.hooks";
+import { GET_FILTERED_KEY } from "../../features/celulose/api/celulose.keys";
+import { LoadFiltered } from "../../types/celulose/celulose.types";
+import {
+  ISODateToLocal,
+  ISOTimeToLocal,
+} from "../../utils/dateStringManipulator";
 
-const CELLULOSE_TYPE = [
+const CELULOSE_TYPE = [
   "",
   "Fibra Longa Klabin",
   "Fibra Curta Klabin",
@@ -18,47 +25,39 @@ const CELLULOSE_TYPE = [
 ] as const;
 
 const formSchema = z.object({
-  celluloseType: z.enum(CELLULOSE_TYPE),
-  firstDate: z.date().optional(),
-  seccondDate: z.date().optional(),
+  celluloseType: z.enum(CELULOSE_TYPE),
+  firstDate: z.string().optional(),
+  seccondDate: z.string().optional(),
 });
 
 type FormFields = z.infer<typeof formSchema>;
 
 function Report() {
   // query utils
-  const [queryData, setqueryData] = useState<InputFiltered>();
+  const [queryData, setqueryData] = useState<LoadFiltered>();
+
+  const { mutate: mutateDeleteLoad } = useDeleteLoad([GET_FILTERED_KEY]);
 
   const {
     data: getFilteredData,
     isFetching: isFetchingFiltered,
     isError: isErrorFiltered,
     error: errorFiltered,
-  } = useQuery({
-    queryKey: ["getFiltered", queryData],
-    queryFn: async () => {
-      return await fetchFiltered(queryData);
-    },
-    enabled: !!queryData,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: 3,
-  });
-
+  } = useGetFiltered(queryData);
   // form utils
   const { register, handleSubmit } = useForm<FormFields>();
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
-    const d: InputFiltered = {
+    const inputData: LoadFiltered = {
       material: "",
-      first_date: null,
-      seccond_date: null,
+      first_date: "",
+      seccond_date: "",
     };
-    if (data.celluloseType) d.material = data.celluloseType;
-    if (data.firstDate) d.first_date = new Date(data.firstDate);
-    if (data.seccondDate) d.seccond_date = new Date(data.seccondDate);
+    if (data.celluloseType) inputData.material = data.celluloseType;
+    if (data.firstDate) inputData.first_date = data.firstDate;
+    if (data.seccondDate) inputData.seccond_date = data.seccondDate;
 
-    setqueryData(d);
+    setqueryData(inputData);
   };
 
   return (
@@ -97,7 +96,7 @@ function Report() {
                   <input
                     {...register("firstDate")}
                     id="firstDate"
-                    type="datetime-local"
+                    type="date"
                     className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 focus:border-yellow-500 focus:ring-yellow-500"
                   />
                 </div>
@@ -109,7 +108,7 @@ function Report() {
                   <input
                     {...register("seccondDate")}
                     id="seccondDate"
-                    type="datetime-local"
+                    type="date"
                     className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 text-gray-900 focus:border-yellow-500 focus:ring-yellow-500"
                   />
                 </div>
@@ -162,8 +161,8 @@ function Report() {
                 material: row.material?.toUpperCase(),
                 peso_medio: row.average_weight,
                 unidade_medida: row.unit,
-                data: row.createdAt?.toLocaleDateString(),
-                hora: row.createdAt?.toLocaleTimeString(),
+                data: ISODateToLocal(row.created_at),
+                hora: ISOTimeToLocal(row.created_at),
                 operador: row.operator.toUpperCase(),
                 turno: row.shift.toUpperCase(),
               };
@@ -204,24 +203,53 @@ function Report() {
               <th>Hora</th>
               <th>Operador</th>
               <th>Turno</th>
+              <th>Remover</th>
             </tr>
           </thead>
           <tbody>
-            {getFilteredData?.map((record) => {
+            {getFilteredData?.map((loads) => {
               return (
-                <tr className="capitalize even:bg-[#e5e7eb]" key={record.id}>
-                  <td>{record.material}</td>
-                  <td>{record.average_weight}</td>
-                  <td>{record.unit}</td>
-                  <td>{record.createdAt?.toLocaleDateString("pt-BR")}</td>
+                <tr className="capitalize even:bg-[#e5e7eb]" key={loads.id}>
+                  <td>{loads.material}</td>
+                  <td>{loads.average_weight}</td>
+                  <td>{loads.unit}</td>
+                  <td>{ISODateToLocal(loads.created_at)}</td>
+                  <td>{ISOTimeToLocal(loads.created_at)}</td>
+                  <td>{loads.operator}</td>
+                  <td>{loads.shift}</td>
                   <td>
-                    {record.createdAt?.toLocaleTimeString("pt-BR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    <button
+                      onClick={() => {
+                        if (
+                          !confirm(
+                            "Tem certeza que deseja remover este registro?"
+                          )
+                        ) {
+                          return;
+                        }
+                        mutateDeleteLoad({ id: loads.id });
+                      }}
+                      className="hover:cursor-pointer"
+                    >
+                      <svg
+                        className="h-6 w-6 text-red-600"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                        />
+                      </svg>
+                    </button>
                   </td>
-                  <td>{record.operator}</td>
-                  <td>{record.shift}</td>
                 </tr>
               );
             })}
@@ -232,6 +260,6 @@ function Report() {
   );
 }
 
-export const Route = createLazyFileRoute("/report")({
+export const Route = createLazyFileRoute("/celulose/report")({
   component: Report,
 });

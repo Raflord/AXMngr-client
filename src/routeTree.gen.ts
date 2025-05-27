@@ -16,43 +16,49 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const ReportLazyImport = createFileRoute('/report')()
-const RemoveLazyImport = createFileRoute('/remove')()
-const ManualLazyImport = createFileRoute('/manual')()
-const CelluloseLazyImport = createFileRoute('/cellulose')()
 const IndexLazyImport = createFileRoute('/')()
+const InsumosIndexLazyImport = createFileRoute('/insumos/')()
+const CeluloseIndexLazyImport = createFileRoute('/celulose/')()
+const CeluloseReportLazyImport = createFileRoute('/celulose/report')()
+const CeluloseManualLazyImport = createFileRoute('/celulose/manual')()
 
 // Create/Update Routes
-
-const ReportLazyRoute = ReportLazyImport.update({
-  id: '/report',
-  path: '/report',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/report.lazy').then((d) => d.Route))
-
-const RemoveLazyRoute = RemoveLazyImport.update({
-  id: '/remove',
-  path: '/remove',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/remove.lazy').then((d) => d.Route))
-
-const ManualLazyRoute = ManualLazyImport.update({
-  id: '/manual',
-  path: '/manual',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/manual.lazy').then((d) => d.Route))
-
-const CelluloseLazyRoute = CelluloseLazyImport.update({
-  id: '/cellulose',
-  path: '/cellulose',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/cellulose.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const InsumosIndexLazyRoute = InsumosIndexLazyImport.update({
+  id: '/insumos/',
+  path: '/insumos/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/insumos/index.lazy').then((d) => d.Route))
+
+const CeluloseIndexLazyRoute = CeluloseIndexLazyImport.update({
+  id: '/celulose/',
+  path: '/celulose/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/celulose/index.lazy').then((d) => d.Route),
+)
+
+const CeluloseReportLazyRoute = CeluloseReportLazyImport.update({
+  id: '/celulose/report',
+  path: '/celulose/report',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/celulose/report.lazy').then((d) => d.Route),
+)
+
+const CeluloseManualLazyRoute = CeluloseManualLazyImport.update({
+  id: '/celulose/manual',
+  path: '/celulose/manual',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/celulose/manual.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -65,32 +71,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/cellulose': {
-      id: '/cellulose'
-      path: '/cellulose'
-      fullPath: '/cellulose'
-      preLoaderRoute: typeof CelluloseLazyImport
+    '/celulose/manual': {
+      id: '/celulose/manual'
+      path: '/celulose/manual'
+      fullPath: '/celulose/manual'
+      preLoaderRoute: typeof CeluloseManualLazyImport
       parentRoute: typeof rootRoute
     }
-    '/manual': {
-      id: '/manual'
-      path: '/manual'
-      fullPath: '/manual'
-      preLoaderRoute: typeof ManualLazyImport
+    '/celulose/report': {
+      id: '/celulose/report'
+      path: '/celulose/report'
+      fullPath: '/celulose/report'
+      preLoaderRoute: typeof CeluloseReportLazyImport
       parentRoute: typeof rootRoute
     }
-    '/remove': {
-      id: '/remove'
-      path: '/remove'
-      fullPath: '/remove'
-      preLoaderRoute: typeof RemoveLazyImport
+    '/celulose/': {
+      id: '/celulose/'
+      path: '/celulose'
+      fullPath: '/celulose'
+      preLoaderRoute: typeof CeluloseIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/report': {
-      id: '/report'
-      path: '/report'
-      fullPath: '/report'
-      preLoaderRoute: typeof ReportLazyImport
+    '/insumos/': {
+      id: '/insumos/'
+      path: '/insumos'
+      fullPath: '/insumos'
+      preLoaderRoute: typeof InsumosIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -100,52 +106,63 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
-  '/cellulose': typeof CelluloseLazyRoute
-  '/manual': typeof ManualLazyRoute
-  '/remove': typeof RemoveLazyRoute
-  '/report': typeof ReportLazyRoute
+  '/celulose/manual': typeof CeluloseManualLazyRoute
+  '/celulose/report': typeof CeluloseReportLazyRoute
+  '/celulose': typeof CeluloseIndexLazyRoute
+  '/insumos': typeof InsumosIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
-  '/cellulose': typeof CelluloseLazyRoute
-  '/manual': typeof ManualLazyRoute
-  '/remove': typeof RemoveLazyRoute
-  '/report': typeof ReportLazyRoute
+  '/celulose/manual': typeof CeluloseManualLazyRoute
+  '/celulose/report': typeof CeluloseReportLazyRoute
+  '/celulose': typeof CeluloseIndexLazyRoute
+  '/insumos': typeof InsumosIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
-  '/cellulose': typeof CelluloseLazyRoute
-  '/manual': typeof ManualLazyRoute
-  '/remove': typeof RemoveLazyRoute
-  '/report': typeof ReportLazyRoute
+  '/celulose/manual': typeof CeluloseManualLazyRoute
+  '/celulose/report': typeof CeluloseReportLazyRoute
+  '/celulose/': typeof CeluloseIndexLazyRoute
+  '/insumos/': typeof InsumosIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cellulose' | '/manual' | '/remove' | '/report'
+  fullPaths:
+    | '/'
+    | '/celulose/manual'
+    | '/celulose/report'
+    | '/celulose'
+    | '/insumos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cellulose' | '/manual' | '/remove' | '/report'
-  id: '__root__' | '/' | '/cellulose' | '/manual' | '/remove' | '/report'
+  to: '/' | '/celulose/manual' | '/celulose/report' | '/celulose' | '/insumos'
+  id:
+    | '__root__'
+    | '/'
+    | '/celulose/manual'
+    | '/celulose/report'
+    | '/celulose/'
+    | '/insumos/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
-  CelluloseLazyRoute: typeof CelluloseLazyRoute
-  ManualLazyRoute: typeof ManualLazyRoute
-  RemoveLazyRoute: typeof RemoveLazyRoute
-  ReportLazyRoute: typeof ReportLazyRoute
+  CeluloseManualLazyRoute: typeof CeluloseManualLazyRoute
+  CeluloseReportLazyRoute: typeof CeluloseReportLazyRoute
+  CeluloseIndexLazyRoute: typeof CeluloseIndexLazyRoute
+  InsumosIndexLazyRoute: typeof InsumosIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
-  CelluloseLazyRoute: CelluloseLazyRoute,
-  ManualLazyRoute: ManualLazyRoute,
-  RemoveLazyRoute: RemoveLazyRoute,
-  ReportLazyRoute: ReportLazyRoute,
+  CeluloseManualLazyRoute: CeluloseManualLazyRoute,
+  CeluloseReportLazyRoute: CeluloseReportLazyRoute,
+  CeluloseIndexLazyRoute: CeluloseIndexLazyRoute,
+  InsumosIndexLazyRoute: InsumosIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -159,26 +176,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/cellulose",
-        "/manual",
-        "/remove",
-        "/report"
+        "/celulose/manual",
+        "/celulose/report",
+        "/celulose/",
+        "/insumos/"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
-    "/cellulose": {
-      "filePath": "cellulose.lazy.tsx"
+    "/celulose/manual": {
+      "filePath": "celulose/manual.lazy.tsx"
     },
-    "/manual": {
-      "filePath": "manual.lazy.tsx"
+    "/celulose/report": {
+      "filePath": "celulose/report.lazy.tsx"
     },
-    "/remove": {
-      "filePath": "remove.lazy.tsx"
+    "/celulose/": {
+      "filePath": "celulose/index.lazy.tsx"
     },
-    "/report": {
-      "filePath": "report.lazy.tsx"
+    "/insumos/": {
+      "filePath": "insumos/index.lazy.tsx"
     }
   }
 }

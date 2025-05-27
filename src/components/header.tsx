@@ -16,13 +16,19 @@ export default function Header() {
           </Link>
           <div className="mt-4 flex items-center gap-x-16 sm:m-0 sm:w-full">
             <Link
-              to="/cellulose"
+              to="/celulose"
               className="text-lg font-bold text-gray-500 hover:underline"
             >
               Celulose
             </Link>
             <Link
-              to="/report"
+              to="/insumos"
+              className="text-lg font-bold text-gray-500 hover:underline"
+            >
+              Insumos
+            </Link>
+            <Link
+              to="/celulose/report"
               className="text-lg font-bold text-gray-500 hover:underline"
             >
               Relatórios
