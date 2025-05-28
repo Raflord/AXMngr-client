@@ -17,5 +17,5 @@ export function ISODateToLocal(isoDateTime: string): string {
 }
 
 export function ISOTimeToLocal(isoDateTime: string): string {
-  return isoDateTime.slice(11, -4);
+  return isoDateTime.slice(11, -3);
 }
