@@ -486,6 +486,13 @@ function Manual() {
                     <td>
                       <button
                         onClick={() => {
+                          if (
+                            !confirm(
+                              "Tem certeza que deseja remover este registro?"
+                            )
+                          ) {
+                            return;
+                          }
                           mutateDeleteLoad({ id: loads.id });
                         }}
                         className="hover:cursor-pointer"
