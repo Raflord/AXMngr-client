@@ -50,8 +50,8 @@ function Report() {
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     const inputData: LoadFiltered = {
       material: "",
-      first_date: "",
-      seccond_date: "",
+      first_date: null,
+      seccond_date: null,
     };
     if (data.celluloseType) inputData.material = data.celluloseType;
     if (data.firstDate) inputData.first_date = data.firstDate;
