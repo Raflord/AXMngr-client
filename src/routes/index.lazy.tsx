@@ -23,7 +23,7 @@ function Index() {
             </Link>
             <Link
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-black/5 p-4 text-black hover:bg-black/10"
-              to="/celulose/report"
+              to="/celulose/relatorio"
             >
               <h3 className="text-2xl font-bold">Relatórios →</h3>
               <div className="text-lg">
