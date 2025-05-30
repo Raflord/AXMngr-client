@@ -28,7 +28,7 @@ export default function Header() {
               Insumos
             </Link>
             <Link
-              to="/celulose/report"
+              to="/celulose/relatorio"
               className="text-lg font-bold text-gray-500 hover:underline"
             >
               Relatórios

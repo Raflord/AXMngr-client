@@ -32,7 +32,7 @@ const formSchema = z.object({
 
 type FormFields = z.infer<typeof formSchema>;
 
-function Report() {
+function Relatorio() {
   // query utils
   const [queryData, setqueryData] = useState<LoadFiltered>();
 
@@ -260,6 +260,6 @@ function Report() {
   );
 }
 
-export const Route = createLazyFileRoute("/celulose/report")({
-  component: Report,
+export const Route = createLazyFileRoute("/celulose/relatorio")({
+  component: Relatorio,
 });

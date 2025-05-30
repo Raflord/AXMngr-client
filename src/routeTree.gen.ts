@@ -20,7 +20,7 @@ const IndexLazyImport = createFileRoute('/')()
 const MadeiraIndexLazyImport = createFileRoute('/madeira/')()
 const InsumosIndexLazyImport = createFileRoute('/insumos/')()
 const CeluloseIndexLazyImport = createFileRoute('/celulose/')()
-const CeluloseReportLazyImport = createFileRoute('/celulose/report')()
+const CeluloseRelatorioLazyImport = createFileRoute('/celulose/relatorio')()
 const CeluloseManualLazyImport = createFileRoute('/celulose/manual')()
 
 // Create/Update Routes
@@ -51,12 +51,12 @@ const CeluloseIndexLazyRoute = CeluloseIndexLazyImport.update({
   import('./routes/celulose/index.lazy').then((d) => d.Route),
 )
 
-const CeluloseReportLazyRoute = CeluloseReportLazyImport.update({
-  id: '/celulose/report',
-  path: '/celulose/report',
+const CeluloseRelatorioLazyRoute = CeluloseRelatorioLazyImport.update({
+  id: '/celulose/relatorio',
+  path: '/celulose/relatorio',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/celulose/report.lazy').then((d) => d.Route),
+  import('./routes/celulose/relatorio.lazy').then((d) => d.Route),
 )
 
 const CeluloseManualLazyRoute = CeluloseManualLazyImport.update({
@@ -85,11 +85,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CeluloseManualLazyImport
       parentRoute: typeof rootRoute
     }
-    '/celulose/report': {
-      id: '/celulose/report'
-      path: '/celulose/report'
-      fullPath: '/celulose/report'
-      preLoaderRoute: typeof CeluloseReportLazyImport
+    '/celulose/relatorio': {
+      id: '/celulose/relatorio'
+      path: '/celulose/relatorio'
+      fullPath: '/celulose/relatorio'
+      preLoaderRoute: typeof CeluloseRelatorioLazyImport
       parentRoute: typeof rootRoute
     }
     '/celulose/': {
@@ -121,7 +121,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/celulose/manual': typeof CeluloseManualLazyRoute
-  '/celulose/report': typeof CeluloseReportLazyRoute
+  '/celulose/relatorio': typeof CeluloseRelatorioLazyRoute
   '/celulose': typeof CeluloseIndexLazyRoute
   '/insumos': typeof InsumosIndexLazyRoute
   '/madeira': typeof MadeiraIndexLazyRoute
@@ -130,7 +130,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/celulose/manual': typeof CeluloseManualLazyRoute
-  '/celulose/report': typeof CeluloseReportLazyRoute
+  '/celulose/relatorio': typeof CeluloseRelatorioLazyRoute
   '/celulose': typeof CeluloseIndexLazyRoute
   '/insumos': typeof InsumosIndexLazyRoute
   '/madeira': typeof MadeiraIndexLazyRoute
@@ -140,7 +140,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/celulose/manual': typeof CeluloseManualLazyRoute
-  '/celulose/report': typeof CeluloseReportLazyRoute
+  '/celulose/relatorio': typeof CeluloseRelatorioLazyRoute
   '/celulose/': typeof CeluloseIndexLazyRoute
   '/insumos/': typeof InsumosIndexLazyRoute
   '/madeira/': typeof MadeiraIndexLazyRoute
@@ -151,7 +151,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/celulose/manual'
-    | '/celulose/report'
+    | '/celulose/relatorio'
     | '/celulose'
     | '/insumos'
     | '/madeira'
@@ -159,7 +159,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/celulose/manual'
-    | '/celulose/report'
+    | '/celulose/relatorio'
     | '/celulose'
     | '/insumos'
     | '/madeira'
@@ -167,7 +167,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/celulose/manual'
-    | '/celulose/report'
+    | '/celulose/relatorio'
     | '/celulose/'
     | '/insumos/'
     | '/madeira/'
@@ -177,7 +177,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   CeluloseManualLazyRoute: typeof CeluloseManualLazyRoute
-  CeluloseReportLazyRoute: typeof CeluloseReportLazyRoute
+  CeluloseRelatorioLazyRoute: typeof CeluloseRelatorioLazyRoute
   CeluloseIndexLazyRoute: typeof CeluloseIndexLazyRoute
   InsumosIndexLazyRoute: typeof InsumosIndexLazyRoute
   MadeiraIndexLazyRoute: typeof MadeiraIndexLazyRoute
@@ -186,7 +186,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   CeluloseManualLazyRoute: CeluloseManualLazyRoute,
-  CeluloseReportLazyRoute: CeluloseReportLazyRoute,
+  CeluloseRelatorioLazyRoute: CeluloseRelatorioLazyRoute,
   CeluloseIndexLazyRoute: CeluloseIndexLazyRoute,
   InsumosIndexLazyRoute: InsumosIndexLazyRoute,
   MadeiraIndexLazyRoute: MadeiraIndexLazyRoute,
@@ -204,7 +204,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/celulose/manual",
-        "/celulose/report",
+        "/celulose/relatorio",
         "/celulose/",
         "/insumos/",
         "/madeira/"
@@ -216,8 +216,8 @@ export const routeTree = rootRoute
     "/celulose/manual": {
       "filePath": "celulose/manual.lazy.tsx"
     },
-    "/celulose/report": {
-      "filePath": "celulose/report.lazy.tsx"
+    "/celulose/relatorio": {
+      "filePath": "celulose/relatorio.lazy.tsx"
     },
     "/celulose/": {
       "filePath": "celulose/index.lazy.tsx"
