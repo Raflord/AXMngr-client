@@ -3,7 +3,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 import "./styles/index.css";
-import { ConfirmDialog } from "./components/confirmDialog";
+import { ConfirmDialog } from "./components/ConfirmDialog";
 
 // Create a new query client
 const queryClient = new QueryClient();
@@ -34,6 +34,6 @@ if (!rootElement.innerHTML) {
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       <ConfirmDialog />
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 }

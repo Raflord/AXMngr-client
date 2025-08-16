@@ -26,7 +26,7 @@ let confirmOptions: {
 };
 
 // public API
-export function confirm(options: {
+export function Confirm(options: {
   title: string;
   description?: string;
   confirmText?: string;

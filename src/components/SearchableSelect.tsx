@@ -54,7 +54,7 @@ export function SearchableSelect({
             className={cn(
               width,
               "justify-between",
-              !field.value && "text-muted-foreground",
+              !field.value && "text-muted-foreground"
             )}
             ref={triggerRef}
           >
@@ -82,7 +82,7 @@ export function SearchableSelect({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        opt.value === field.value ? "opacity-100" : "opacity-0",
+                        opt.value === field.value ? "opacity-100" : "opacity-0"
                       )}
                     />
                     {opt.label}

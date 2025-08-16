@@ -28,6 +28,7 @@ export function RadioOptions({
   return (
     <FormItem className="space-y-3">
       <FormLabel>{label}</FormLabel>
+      {description && <FormDescription>{description}</FormDescription>}
       <FormControl>
         <RadioGroup
           defaultValue={""}
@@ -48,7 +49,6 @@ export function RadioOptions({
           ))}
         </RadioGroup>
       </FormControl>
-      {description && <FormDescription>{description}</FormDescription>}
       <FormMessage />
     </FormItem>
   );

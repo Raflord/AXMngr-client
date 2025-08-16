@@ -26,7 +26,7 @@ interface CustomSelectProps {
   width?: string;
 }
 
-export function CustomSelec({
+export function CustomSelect({
   field,
   label,
   placeholder,

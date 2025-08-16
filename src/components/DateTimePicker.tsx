@@ -36,7 +36,7 @@ export function DateTimePicker({ field, label }: DateTimePickerProps) {
   const { triggerRef, container } = useDialogPortal<HTMLButtonElement>();
 
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
-    field.value ? new Date(field.value) : undefined,
+    field.value ? new Date(field.value) : undefined
   );
   const [selectedHour, setSelectedHour] = React.useState<string>("");
   const [selectedMinute, setSelectedMinute] = React.useState<string>("");
@@ -60,10 +60,10 @@ export function DateTimePicker({ field, label }: DateTimePickerProps) {
   }, [selectedDate, selectedHour, selectedMinute, field]);
 
   const hours = Array.from({ length: 24 }, (_, i) =>
-    String(i).padStart(2, "0"),
+    String(i).padStart(2, "0")
   );
   const minutes = Array.from({ length: 60 }, (_, i) =>
-    String(i).padStart(2, "0"),
+    String(i).padStart(2, "0")
   );
 
   return (

@@ -2,12 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Path } from "react-hook-form";
 import { Form, FormField } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { SearchableSelect } from "@/components/searchableSelect";
-import { RadioOptions } from "@/components/radioOptions";
-import { DateTimePicker } from "@/components/dateTimePicker";
+import { SearchableSelect } from "@/components/SearchableSelect";
+import { RadioOptions } from "@/components/RadioOptions";
+import { DateTimePicker } from "@/components/DateTimePicker";
 import { z } from "zod";
 import { ReactNode } from "react";
-import { CustomSelec } from "./customSelect";
+import { CustomSelect } from "./CustomSelect";
 
 type FieldType = "customSelect" | "searchableSelect" | "radio" | "datetime";
 
@@ -62,7 +62,7 @@ export function DynamicForm<TSchema extends z.ZodType<any, any>>({
               switch (fieldConfig.type) {
                 case "customSelect":
                   return (
-                    <CustomSelec
+                    <CustomSelect
                       field={field}
                       label={fieldConfig.label}
                       placeholder={fieldConfig.placeholder || ""}

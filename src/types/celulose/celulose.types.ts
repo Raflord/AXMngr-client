@@ -3,9 +3,9 @@ import { z } from "zod";
 const load = z.object({
   id: z.string(),
   material: z.string(),
-  average_weight: z.number(),
+  averageWeight: z.number(),
   unit: z.string(),
-  created_at: z.string(),
+  createdAt: z.string(),
   timezone: z.string(),
   operator: z.string(),
   shift: z.string(),
@@ -13,14 +13,14 @@ const load = z.object({
 
 const loadSummary = z.object({
   material: z.string(),
-  total_weight: z.number(),
+  totalWeight: z.number(),
 });
 
 const inputData = z.object({
   id: z.string().optional(),
   material: z.string(),
-  average_weight: z.number(),
-  created_at: z.string(),
+  averageWeight: z.number(),
+  createdAt: z.string(),
   timezone: z.string(),
   operator: z.string(),
   shift: z.string(),
@@ -28,8 +28,8 @@ const inputData = z.object({
 
 const loadFiltered = z.object({
   material: z.string().nullable(),
-  first_date: z.string().nullable(),
-  seccond_date: z.string().nullable(),
+  firstDate: z.string().nullable(),
+  seccondDate: z.string().nullable(),
 });
 
 export type Load = z.infer<typeof load>;
