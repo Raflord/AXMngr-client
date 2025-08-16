@@ -11,7 +11,7 @@ const ENDPOINT = "/celulose";
 
 export const fetchLatest = async (): Promise<Load[]> => {
   const response: AxiosResponse<Load[]> = await axios.get<Load[]>(
-    `${ENDPOINT}/latest`
+    `${ENDPOINT}/latest`,
   );
 
   return response.data ?? null;
@@ -19,18 +19,18 @@ export const fetchLatest = async (): Promise<Load[]> => {
 
 export const fetchSummary = async (): Promise<LoadSummary[]> => {
   const response: AxiosResponse<LoadSummary[]> = await axios.get<LoadSummary[]>(
-    `${ENDPOINT}/day`
+    `${ENDPOINT}/day`,
   );
 
   return response.data ?? null;
 };
 
 export const fetchFiltered = async (
-  inputData: LoadFiltered | undefined
+  inputData: LoadFiltered | undefined,
 ): Promise<Load[]> => {
   const response: AxiosResponse<Load[]> = await axios.post<Load[]>(
     `${ENDPOINT}/filtered`,
-    inputData
+    inputData,
   );
 
   return response.data ?? null;
