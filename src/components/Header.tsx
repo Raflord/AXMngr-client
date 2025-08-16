@@ -6,7 +6,7 @@ export default function Header() {
     <>
       <header>
         <nav className="my-4 flex flex-col items-center justify-around sm:flex-row sm:justify-between">
-          <Link to="/" className="sm:ml-4 sm:mr-16">
+          <Link to="/" className="sm:mr-16 sm:ml-4">
             <img
               src={boPaperLogo}
               alt="Logo BO Paper"

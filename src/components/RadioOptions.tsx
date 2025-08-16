@@ -38,7 +38,7 @@ export function RadioOptions({
         >
           {options.map((opt) => (
             <FormItem
-              className="flex items-center space-x-3 space-y-0"
+              className="flex items-center space-y-0 space-x-3"
               key={opt.value}
             >
               <FormControl>

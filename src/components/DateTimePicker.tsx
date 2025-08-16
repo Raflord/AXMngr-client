@@ -1,8 +1,11 @@
-import * as React from "react";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
@@ -15,13 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
 import { useDialogPortal } from "@/hooks/useDialogContainer";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import * as React from "react";
 
 interface DateTimePickerProps {
   field: {
@@ -87,7 +87,7 @@ export function DateTimePicker({ field, label }: DateTimePickerProps) {
             </Button>
           </PopoverTrigger>
           <PopoverContent
-            className="w-auto p-4 space-y-3"
+            className="w-auto space-y-3 p-4"
             container={container}
           >
             <Calendar
