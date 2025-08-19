@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { ControllerRenderProps } from "react-hook-form";
 
 interface Option {
   label: string;
@@ -19,7 +20,7 @@ interface Option {
 }
 
 interface CustomSelectProps {
-  field: any;
+  field: ControllerRenderProps;
   label: string;
   placeholder: string;
   options: Option[];

@@ -6,6 +6,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ControllerRenderProps } from "react-hook-form";
 
 interface Option {
   label: string;
@@ -13,7 +14,7 @@ interface Option {
 }
 
 interface RadioOptionsProps {
-  field: any;
+  field: ControllerRenderProps;
   label: string;
   description?: string;
   options: Option[];

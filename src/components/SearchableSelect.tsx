@@ -17,6 +17,7 @@ import { useDialogPortal } from "@/hooks/useDialogContainer";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
+import { ControllerRenderProps } from "react-hook-form";
 
 interface Option {
   label: string;
@@ -24,7 +25,7 @@ interface Option {
 }
 
 interface SearchableSelectProps {
-  field: any;
+  field: ControllerRenderProps;
   label: string;
   placeholder: string;
   options: Option[];

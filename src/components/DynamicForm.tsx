@@ -16,7 +16,7 @@ interface Option {
   value: string;
 }
 
-interface FieldConfig<TSchema extends z.ZodType<any, any>> {
+interface FieldConfig<TSchema extends z.ZodTypeAny> {
   name: Path<z.infer<TSchema>>;
   label: string;
   placeholder?: string;
@@ -26,16 +26,16 @@ interface FieldConfig<TSchema extends z.ZodType<any, any>> {
   width?: string;
 }
 
-interface DynamicFormProps<TSchema extends z.ZodType<any, any>> {
+interface DynamicFormProps<TSchema extends z.ZodTypeAny> {
   styles?: string;
-  schema: z.ZodType<any, any>;
+  schema: z.ZodTypeAny;
   fields: FieldConfig<TSchema>[];
-  onSubmit: (values: any) => void;
+  onSubmit: (values: z.infer<TSchema>) => void;
   children?: ReactNode;
   submitText: string;
 }
 
-export function DynamicForm<TSchema extends z.ZodType<any, any>>({
+export function DynamicForm<TSchema extends z.ZodTypeAny>({
   styles,
   schema,
   fields,
