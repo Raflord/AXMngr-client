@@ -13,58 +13,62 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import Logo from "@/registry/default/components/navbar-components/logo";
 import { BookOpenIcon, InfoIcon, LifeBuoyIcon } from "lucide-react";
+import AlmoxManagerLogo from "./../assets/almox-manager-logo.png";
+import { ThemeToggle } from "./ThemeToggle";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "#", label: "Home" },
+  { href: "/", label: "Início" },
   {
-    label: "Features",
+    label: "Celulose",
     submenu: true,
     type: "description",
     items: [
       {
-        href: "#",
-        label: "Components",
-        description: "Browse all components in the library.",
+        href: "/celulose",
+        label: "Adicionar",
+        description: "Adicionar carga",
       },
       {
-        href: "#",
-        label: "Documentation",
-        description: "Learn how to use the library.",
+        href: "/celulose/manual",
+        label: "Manual",
+        description: "Adicionar carga com data e hora personalizada",
       },
       {
-        href: "#",
-        label: "Templates",
-        description: "Pre-built layouts for common use cases.",
+        href: "/celulose/relatorio",
+        label: "Relatórios",
+        description: "Extrair relatórios de consumo",
       },
     ],
   },
   {
-    label: "Pricing",
+    label: "Insumos",
     submenu: true,
-    type: "simple",
+    type: "description",
     items: [
-      { href: "#", label: "Product A" },
-      { href: "#", label: "Product B" },
-      { href: "#", label: "Product C" },
-      { href: "#", label: "Product D" },
+      {
+        href: "/insumos",
+        label: "Em construção",
+        description: "Disponível em breve",
+      },
     ],
   },
   {
-    label: "About",
+    label: "Madeira",
     submenu: true,
-    type: "icon",
+    type: "description",
     items: [
-      { href: "#", label: "Getting Started", icon: "BookOpenIcon" },
-      { href: "#", label: "Tutorials", icon: "LifeBuoyIcon" },
-      { href: "#", label: "About Us", icon: "InfoIcon" },
+      {
+        href: "/madeira",
+        label: "Em construção",
+        description: "Disponível em breve",
+      },
     ],
   },
 ];
 
-export default function Component() {
+export function Navbar() {
   return (
     <header className="border-b px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -159,8 +163,13 @@ export default function Component() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
-              <Logo />
+            <a href="/" className="text-primary hover:text-primary/90">
+              <img
+                src={AlmoxManagerLogo}
+                alt="AlmoxManager Logo"
+                className="max-h-12 max-w-12"
+                loading="lazy"
+              />
             </a>
             {/* Navigation menu */}
             <NavigationMenu viewport={false} className="max-md:hidden">
@@ -242,7 +251,7 @@ export default function Component() {
                     ) : (
                       <NavigationMenuLink
                         href={link.href}
-                        className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                        className="text-muted-foreground py-1.5 font-medium"
                       >
                         {link.label}
                       </NavigationMenuLink>
@@ -255,6 +264,7 @@ export default function Component() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Button asChild variant="ghost" size="sm" className="text-sm">
             <a href="#">Sign In</a>
           </Button>
