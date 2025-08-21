@@ -1,0 +1,2 @@
+# ignore tanstack generated files
+src/routeTree.gen.ts
