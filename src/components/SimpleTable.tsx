@@ -26,12 +26,14 @@ export function SimpleTable<T>({
       <TableHeader>
         <TableRow>
           {headers?.map((h) => (
-            <TableHead key={h} className="capitalize">
+            <TableHead key={h} className="font-bold capitalize">
               {h}
             </TableHead>
           ))}
         </TableRow>
       </TableHeader>
+
+      {/*Pass the TableRow and TableCell from shadcn/ui when calling the components to build it*/}
       <TableBody>{values?.map((row) => renderRow(row))}</TableBody>
     </Table>
   );

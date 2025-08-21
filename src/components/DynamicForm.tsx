@@ -8,8 +8,14 @@ import { ReactNode } from "react";
 import { Path, useForm } from "react-hook-form";
 import { z } from "zod";
 import { CustomSelect } from "./CustomSelect";
+import { DatePicker } from "./DatePicker";
 
-type FieldType = "customSelect" | "searchableSelect" | "radio" | "datetime";
+type FieldType =
+  | "customSelect"
+  | "searchableSelect"
+  | "radio"
+  | "date"
+  | "datetime";
 
 interface Option {
   label: string;
@@ -89,11 +95,12 @@ export function DynamicForm<TSchema extends z.ZodTypeAny>({
                       options={fieldConfig.options || []}
                     />
                   );
-
                 case "datetime":
                   return (
                     <DateTimePicker field={field} label={fieldConfig.label} />
                   );
+                case "date":
+                  return <DatePicker field={field} label={fieldConfig.label} />;
                 default:
                   return <></>;
               }
