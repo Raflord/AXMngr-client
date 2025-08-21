@@ -1,42 +1,78 @@
+import { Confirm } from "@/components/ConfirmDialog";
+import { DynamicForm } from "@/components/DynamicForm";
+import { EditDialog } from "@/components/EditDialog";
+import { Navbar } from "@/components/Navbar";
+import { SimpleTable } from "@/components/SimpleTable";
+import { Button } from "@/components/ui/button";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { Download, LoaderCircle, SquarePen, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { utils, writeFile } from "xlsx";
 import { z } from "zod";
-import Header from "../../components/header";
 import {
   useDeleteLoad,
   useGetFiltered,
+  useUpdateLoad,
 } from "../../features/celulose/api/celulose.hooks";
 import { GET_FILTERED_KEY } from "../../features/celulose/api/celulose.keys";
-import { LoadFiltered } from "../../types/celulose/celulose.types";
+import { Load, LoadFiltered } from "../../types/celulose/celulose.types";
 import {
   ISODateToLocal,
   ISOTimeToLocal,
-} from "../../utils/dateStringManipulator";
+} from "../../utils/date-string-manipulator";
+
+const OPERATORS = [
+  { label: "Aldo Vitorino da Silva", value: "aldo vitorino da silva" },
+  {
+    label: "Carlos Eduardo Aparecido Stetiski Dutra",
+    value: "carlos eduardo aparecido stetiski dutra",
+  },
+  { label: "Felipe Rodrigues", value: "felipe rodrigues" },
+  { label: "Luciano Hattanda Sugiyama", value: "luciano hattanda sugiyama" },
+  { label: "Saimon de Matos Leandro", value: "saimon de matos leandro" },
+];
+
+const SHIFTS = [
+  { label: "Turno A", value: "a" },
+  { label: "Turno B", value: "b" },
+  { label: "Turno C", value: "c" },
+  { label: "Turno D", value: "d" },
+  { label: "Turno E", value: "e" },
+];
 
 const CELULOSE_TYPE = [
-  "",
-  "Fibra Longa Klabin",
-  "Fibra Curta Klabin",
-  "Fibra Longa UPM PULP",
-  "Fibra Longa Mercer",
-  "Fibra Longa Rottneros",
-] as const;
+  { label: "Todos", value: "all" },
+  { label: "Fibra Longa Klabin", value: "fibra longa klabin" },
+  { label: "Fibra Curta Klabin", value: "fibra curta klabin" },
+  { label: "Fibra Longa UPM PULP", value: "fibra longa upm pulp" },
+  { label: "Fibra Longa Mercer", value: "fibra longa mercer" },
+  { label: "Fibra Longa Rottneros", value: "fibra longa rottneros" },
+];
 
-const formSchema = z.object({
-  celluloseType: z.enum(CELULOSE_TYPE),
+const searchFormSchema = z.object({
+  celuloseType: z.string().optional(),
   firstDate: z.string().optional(),
   seccondDate: z.string().optional(),
 });
 
-type FormFields = z.infer<typeof formSchema>;
+const updateFormSchema = z.object({
+  operator: z.string({ message: "Selecione um operador" }),
+  shift: z.string({ message: "Selecione um turno" }),
+  celuloseType: z.string({ message: "Selecione um tipo de celulose" }),
+  createdAt: z.string({ message: "Selecione a data e hora" }),
+});
+
+type SearchFormFields = z.infer<typeof searchFormSchema>;
+type UpdateFormFields = z.infer<typeof updateFormSchema>;
 
 function Relatorio() {
   // query utils
-  const [queryData, setqueryData] = useState<LoadFiltered>();
+  const [queryData, setQueryData] = useState<LoadFiltered>();
 
   const { mutate: mutateDeleteLoad } = useDeleteLoad([GET_FILTERED_KEY]);
+
+  const { mutate: mutateUpdateLoad } = useUpdateLoad([GET_FILTERED_KEY]);
 
   const {
     data: getFilteredData,
@@ -44,217 +80,225 @@ function Relatorio() {
     isError: isErrorFiltered,
     error: errorFiltered,
   } = useGetFiltered(queryData);
-  // form utils
-  const { register, handleSubmit } = useForm<FormFields>();
 
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
+  const handleSearch = (data: SearchFormFields) => {
     const inputData: LoadFiltered = {
       material: "",
-      first_date: null,
-      seccond_date: null,
+      firstDate: null,
+      seccondDate: null,
     };
-    if (data.celluloseType) inputData.material = data.celluloseType;
-    if (data.firstDate) inputData.first_date = data.firstDate;
-    if (data.seccondDate) inputData.seccond_date = data.seccondDate;
+    if (data.celuloseType) inputData.material = data.celuloseType;
+    if (data.firstDate) inputData.firstDate = data.firstDate;
+    if (data.seccondDate) inputData.seccondDate = data.seccondDate;
+    if (data.celuloseType === "all") {
+      inputData.material = "";
+    }
 
-    setqueryData(inputData);
+    setQueryData(inputData);
+  };
+
+  const handleUpdate = (id: string, data: UpdateFormFields) => {
+    const inputData = {
+      id: id,
+      material: data.celuloseType,
+      averageWeight: 3000,
+      unit: "KG",
+      createdAt: data.createdAt,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      operator: data.operator,
+      shift: data.shift,
+    };
+
+    mutateUpdateLoad(inputData);
   };
 
   return (
     <>
       <main className="mx-auto flex min-h-screen max-w-7xl flex-col px-2">
-        <Header />
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <fieldset className="flex flex-col">
-              <label htmlFor="celluloseType" className="mb-2 text-lg">
-                Selecione o tipo de celulose
-              </label>
-              <select
-                {...register("celluloseType")}
-                id="celluloseType"
-                className="mb-4 w-full max-w-fit rounded-lg border border-gray-500 bg-gray-200 p-2 focus:border-yellow-500 focus:ring-yellow-500"
-              >
-                <option value="">Todos</option>
-                <option value="Fibra Longa Klabin">Fibra Longa Klabin</option>
-                <option value="Fibra Curta Klabin">Fibra Curta Klabin</option>
-                <option value="Fibra Longa UPM PULP">
-                  Fibra Longa UPM PULP
-                </option>
-                <option value="Fibra Longa Mercer">Fibra Longa Mercer</option>
-                <option value="Fibra Longa Rottneros">
-                  Fibra Longa Rottneros
-                </option>
-              </select>
-            </fieldset>
-            <fieldset>
-              <div className="flex max-w-fit flex-col gap-x-8 sm:flex-row sm:items-end">
-                <div>
-                  <label htmlFor="firstDate" className="block text-lg">
-                    Data inicial
-                  </label>
-                  <input
-                    {...register("firstDate")}
-                    id="firstDate"
-                    type="date"
-                    className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 focus:border-yellow-500 focus:ring-yellow-500"
-                  />
-                </div>
-                <div className="mt-2 font-bold">Até</div>
-                <div>
-                  <label htmlFor="seccondDate" className="block text-lg">
-                    Data final
-                  </label>
-                  <input
-                    {...register("seccondDate")}
-                    id="seccondDate"
-                    type="date"
-                    className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 text-gray-900 focus:border-yellow-500 focus:ring-yellow-500"
-                  />
-                </div>
-              </div>
-            </fieldset>
-          </div>
-          {isFetchingFiltered ? (
-            <button
-              disabled
-              type="button"
-              className="mb-8 mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300"
-            >
-              <svg
-                aria-hidden="true"
-                role="status"
-                className="me-3 inline h-4 w-4 animate-spin text-white"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="#1C64F2"
-                />
-              </svg>
-              Buscando...
-            </button>
-          ) : isErrorFiltered ? (
-            <button className="mb-2 mt-4 max-w-80 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300">
-              {errorFiltered.message}
-            </button>
-          ) : (
-            <button
-              type="submit"
-              className="mb-8 mt-4 max-w-28 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300"
-            >
-              Buscar
-            </button>
-          )}
-        </form>
-        <button
-          onClick={() => {
-            if (!getFilteredData) return;
-            const formatedData = getFilteredData.map((row) => {
-              return {
-                material: row.material?.toUpperCase(),
-                peso_medio: row.average_weight,
-                unidade_medida: row.unit,
-                data: ISODateToLocal(row.created_at),
-                hora: ISOTimeToLocal(row.created_at),
-                operador: row.operator.toUpperCase(),
-                turno: row.shift.toUpperCase(),
-              };
-            });
-
-            const worksheet = utils.json_to_sheet(formatedData);
-            const workbook = utils.book_new();
-            utils.book_append_sheet(workbook, worksheet);
-            writeFile(workbook, "export.xlsx", { compression: true });
+        <Navbar />
+        <DynamicForm
+          styles="space-y-8 my-6"
+          schema={searchFormSchema}
+          submitText="Buscar"
+          fields={[
+            {
+              name: "celuloseType",
+              label: "Material",
+              placeholder: "Todos",
+              type: "customSelect",
+              description: "Selecionar tipo de celulose",
+              options: CELULOSE_TYPE,
+            },
+            {
+              name: "firstDate",
+              label: "Data inicial",
+              type: "date",
+            },
+            {
+              name: "seccondDate",
+              label: "Data final",
+              type: "date",
+            },
+          ]}
+          onSubmit={async (formValues: SearchFormFields) => {
+            handleSearch(formValues);
           }}
-          type="button"
-          className="me-2 inline-flex max-w-fit items-center rounded-full bg-green-700 p-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-4 focus:ring-blue-300"
-        >
-          <svg
-            className="h-5 w-5 text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 16 18"
+        />
+        {isFetchingFiltered ? (
+          <div className="flex space-x-2">
+            <LoaderCircle className="animate-spin" />
+            <span className="animate-caret-blink">Buscando...</span>
+          </div>
+        ) : isErrorFiltered ? (
+          <>{errorFiltered.message}</>
+        ) : (
+          <></>
+        )}
+        {getFilteredData && (
+          <Button
+            onClick={async () => {
+              const ok = await Confirm({
+                title: "Download",
+                description: "Tem certeza que deseja baixar o arquivo em .xlsx",
+                confirmText: "Baixar",
+                cancelText: "Cancelar",
+                buttonVariant: "default",
+              });
+
+              if (!ok) return;
+
+              if (!getFilteredData) return;
+              const formatedData = getFilteredData.map((row) => {
+                return {
+                  material: row.material?.toUpperCase(),
+                  pesoMedio: row.averageWeight,
+                  unidadeMedida: row.unit,
+                  data: ISODateToLocal(row.createdAt),
+                  hora: ISOTimeToLocal(row.createdAt),
+                  operador: row.operator.toUpperCase(),
+                  turno: row.shift.toUpperCase(),
+                };
+              });
+
+              const worksheet = utils.json_to_sheet(formatedData);
+              const workbook = utils.book_new();
+              utils.book_append_sheet(workbook, worksheet);
+              writeFile(workbook, "export.xlsx", { compression: true });
+            }}
+            className="max-y-fit max-w-fit rounded-full"
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3"
-            />
-          </svg>
-          <span className="sr-only">Icon description</span>
-        </button>
-        <table className="my-6 block overflow-x-auto md:table">
-          <thead>
-            <tr>
-              <th>Material</th>
-              <th>Peso Medio</th>
-              <th>UM</th>
-              <th>Data</th>
-              <th>Hora</th>
-              <th>Operador</th>
-              <th>Turno</th>
-              <th>Remover</th>
-            </tr>
-          </thead>
-          <tbody>
-            {getFilteredData?.map((loads) => {
-              return (
-                <tr className="capitalize even:bg-[#e5e7eb]" key={loads.id}>
-                  <td>{loads.material}</td>
-                  <td>{loads.average_weight}</td>
-                  <td>{loads.unit}</td>
-                  <td>{ISODateToLocal(loads.created_at)}</td>
-                  <td>{ISOTimeToLocal(loads.created_at)}</td>
-                  <td>{loads.operator}</td>
-                  <td>{loads.shift}</td>
-                  <td>
+            <Download />
+          </Button>
+        )}
+        <div>
+          {getFilteredData && (
+            <SimpleTable<Load>
+              headers={[
+                "Material",
+                "Peso Médio",
+                "Data",
+                "Hora",
+                "Operador",
+                "Turno",
+                "Editar",
+                "Remover",
+              ]}
+              renderRow={(loads) => (
+                <TableRow key={loads.id} className="capitalize">
+                  <TableCell>{loads.material}</TableCell>
+                  <TableCell>
+                    {loads.averageWeight} {loads.unit}
+                  </TableCell>
+                  <TableCell>{ISODateToLocal(loads.createdAt)}</TableCell>
+                  <TableCell>{ISOTimeToLocal(loads.createdAt)}</TableCell>
+                  <TableCell>{loads.operator}</TableCell>
+                  <TableCell>{loads.shift}</TableCell>
+                  <TableCell>
+                    <EditDialog
+                      title="Alteração de registro"
+                      description="Preencha as informações a serem alteradas"
+                      triggerButton={
+                        <SquarePen className="hover:cursor-pointer" />
+                      }
+                    >
+                      <DynamicForm
+                        styles="space-y-8"
+                        schema={updateFormSchema}
+                        submitText="Alterar"
+                        fields={[
+                          {
+                            name: "operator",
+                            label: "Operador",
+                            placeholder: "Selecionar operador",
+                            type: "customSelect",
+                            options: OPERATORS,
+                            width: "w-[400px]",
+                          },
+                          {
+                            name: "shift",
+                            label: "Turno",
+                            placeholder: "Selecionar turno",
+                            type: "customSelect",
+                            options: SHIFTS,
+                            width: "w-[200px]",
+                          },
+                          {
+                            name: "celuloseType",
+                            label: "Celulose",
+                            description: "Selecionar tipo de celulose",
+                            type: "radio",
+                            options: CELULOSE_TYPE,
+                          },
+                          {
+                            name: "createdAt",
+                            label: "Data e Hora",
+                            type: "datetime",
+                          },
+                        ]}
+                        onSubmit={async (formValues: UpdateFormFields) => {
+                          const ok = await Confirm({
+                            title: "Confirmar alteração",
+                            description:
+                              "Você está prestes a alterar este registro. Após a alteração, não será possível desfazer.",
+                            confirmText: "Alterar",
+                            cancelText: "Cancelar",
+                            buttonVariant: "default",
+                          });
+
+                          if (ok) {
+                            handleUpdate(loads.id, formValues);
+                          }
+                        }}
+                      />
+                    </EditDialog>
+                  </TableCell>
+                  <TableCell>
                     <button
-                      onClick={() => {
-                        if (
-                          !confirm(
-                            "Tem certeza que deseja remover este registro?"
-                          )
-                        ) {
-                          return;
+                      onClick={async () => {
+                        const ok = await Confirm({
+                          title: "Confirmar exclusão",
+                          description:
+                            "Tem certeza de que deseja remover este registro? Essa ação não poderá ser desfeita e apagará permanentemente as informações do sistema.",
+                          confirmText: "Sim, remover",
+                          cancelText: "Cancelar",
+                          buttonVariant: "destructive",
+                        });
+
+                        if (ok) {
+                          mutateDeleteLoad({ id: loads.id });
                         }
-                        mutateDeleteLoad({ id: loads.id });
                       }}
                       className="hover:cursor-pointer"
                     >
-                      <svg
-                        className="h-6 w-6 text-red-600"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-                        />
-                      </svg>
+                      <Trash2 className="text-destructive" />
                     </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                  </TableCell>
+                </TableRow>
+              )}
+              values={getFilteredData}
+            />
+          )}
+        </div>
       </main>
     </>
   );

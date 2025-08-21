@@ -16,7 +16,6 @@ const IndexLazyRouteImport = createFileRoute('/')()
 const MadeiraIndexLazyRouteImport = createFileRoute('/madeira/')()
 const InsumosIndexLazyRouteImport = createFileRoute('/insumos/')()
 const CeluloseIndexLazyRouteImport = createFileRoute('/celulose/')()
-const CeluloseTestLazyRouteImport = createFileRoute('/celulose/test')()
 const CeluloseRelatorioLazyRouteImport = createFileRoute(
   '/celulose/relatorio',
 )()
@@ -44,11 +43,6 @@ const CeluloseIndexLazyRoute = CeluloseIndexLazyRouteImport.update({
 } as any).lazy(() =>
   import('./routes/celulose/index.lazy').then((d) => d.Route),
 )
-const CeluloseTestLazyRoute = CeluloseTestLazyRouteImport.update({
-  id: '/celulose/test',
-  path: '/celulose/test',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/celulose/test.lazy').then((d) => d.Route))
 const CeluloseRelatorioLazyRoute = CeluloseRelatorioLazyRouteImport.update({
   id: '/celulose/relatorio',
   path: '/celulose/relatorio',
@@ -68,7 +62,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/celulose/manual': typeof CeluloseManualLazyRoute
   '/celulose/relatorio': typeof CeluloseRelatorioLazyRoute
-  '/celulose/test': typeof CeluloseTestLazyRoute
   '/celulose': typeof CeluloseIndexLazyRoute
   '/insumos': typeof InsumosIndexLazyRoute
   '/madeira': typeof MadeiraIndexLazyRoute
@@ -77,7 +70,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/celulose/manual': typeof CeluloseManualLazyRoute
   '/celulose/relatorio': typeof CeluloseRelatorioLazyRoute
-  '/celulose/test': typeof CeluloseTestLazyRoute
   '/celulose': typeof CeluloseIndexLazyRoute
   '/insumos': typeof InsumosIndexLazyRoute
   '/madeira': typeof MadeiraIndexLazyRoute
@@ -87,7 +79,6 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/celulose/manual': typeof CeluloseManualLazyRoute
   '/celulose/relatorio': typeof CeluloseRelatorioLazyRoute
-  '/celulose/test': typeof CeluloseTestLazyRoute
   '/celulose/': typeof CeluloseIndexLazyRoute
   '/insumos/': typeof InsumosIndexLazyRoute
   '/madeira/': typeof MadeiraIndexLazyRoute
@@ -98,7 +89,6 @@ export interface FileRouteTypes {
     | '/'
     | '/celulose/manual'
     | '/celulose/relatorio'
-    | '/celulose/test'
     | '/celulose'
     | '/insumos'
     | '/madeira'
@@ -107,7 +97,6 @@ export interface FileRouteTypes {
     | '/'
     | '/celulose/manual'
     | '/celulose/relatorio'
-    | '/celulose/test'
     | '/celulose'
     | '/insumos'
     | '/madeira'
@@ -116,7 +105,6 @@ export interface FileRouteTypes {
     | '/'
     | '/celulose/manual'
     | '/celulose/relatorio'
-    | '/celulose/test'
     | '/celulose/'
     | '/insumos/'
     | '/madeira/'
@@ -126,7 +114,6 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   CeluloseManualLazyRoute: typeof CeluloseManualLazyRoute
   CeluloseRelatorioLazyRoute: typeof CeluloseRelatorioLazyRoute
-  CeluloseTestLazyRoute: typeof CeluloseTestLazyRoute
   CeluloseIndexLazyRoute: typeof CeluloseIndexLazyRoute
   InsumosIndexLazyRoute: typeof InsumosIndexLazyRoute
   MadeiraIndexLazyRoute: typeof MadeiraIndexLazyRoute
@@ -162,13 +149,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CeluloseIndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/celulose/test': {
-      id: '/celulose/test'
-      path: '/celulose/test'
-      fullPath: '/celulose/test'
-      preLoaderRoute: typeof CeluloseTestLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/celulose/relatorio': {
       id: '/celulose/relatorio'
       path: '/celulose/relatorio'
@@ -190,7 +170,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   CeluloseManualLazyRoute: CeluloseManualLazyRoute,
   CeluloseRelatorioLazyRoute: CeluloseRelatorioLazyRoute,
-  CeluloseTestLazyRoute: CeluloseTestLazyRoute,
   CeluloseIndexLazyRoute: CeluloseIndexLazyRoute,
   InsumosIndexLazyRoute: InsumosIndexLazyRoute,
   MadeiraIndexLazyRoute: MadeiraIndexLazyRoute,

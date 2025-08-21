@@ -1,10 +1,14 @@
+import { Confirm } from "@/components/ConfirmDialog";
+import { DynamicForm } from "@/components/DynamicForm";
+import { EditDialog } from "@/components/EditDialog";
+import { Navbar } from "@/components/Navbar";
+import { SimpleTable } from "@/components/SimpleTable";
+import { Button } from "@/components/ui/button";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { useQueryClient } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { RefreshCw, SquarePen, Trash2 } from "lucide-react";
 import { z } from "zod";
-import Header from "../../components/header";
-import Modal from "../../components/modal";
 import {
   useCreateLoad,
   useDeleteLoad,
@@ -16,42 +20,59 @@ import {
   GET_LATEST_KEY,
   GET_SUMMARY_KEY,
 } from "../../features/celulose/api/celulose.keys";
+import { Load } from "../../types/celulose/celulose.types";
 import {
+  generateDateTimeString,
   ISODateToLocal,
   ISOTimeToLocal,
-} from "../../utils/dateStringManipulator";
+} from "../../utils/date-string-manipulator";
+
+const OPERATORS = [
+  { label: "Aldo Vitorino da Silva", value: "aldo vitorino da silva" },
+  {
+    label: "Carlos Eduardo Aparecido Stetiski Dutra",
+    value: "carlos eduardo aparecido stetiski dutra",
+  },
+  { label: "Felipe Rodrigues", value: "felipe rodrigues" },
+  { label: "Luciano Hattanda Sugiyama", value: "luciano hattanda sugiyama" },
+  { label: "Saimon de Matos Leandro", value: "saimon de matos leandro" },
+];
+
+const SHIFTS = [
+  { label: "Turno A", value: "a" },
+  { label: "Turno B", value: "b" },
+  { label: "Turno C", value: "c" },
+  { label: "Turno D", value: "d" },
+  { label: "Turno E", value: "e" },
+];
 
 const CELULOSE_TYPE = [
-  "Fibra Longa Klabin",
-  "Fibra Curta Klabin",
-  "Fibra Longa UPM PULP",
-  "Fibra Longa Mercer",
-  "Fibra Longa Rottneros",
-] as const;
-const OPERATORS = [
-  "Aldo Vitorino da Silva",
-  "Carlos Eduardo Aparecido Stetiski Dutra",
-  "Felipe Rodrigues",
-  "Luciano Hattanda Sugiyama",
-  "Saimon de Matos Leandro",
-] as const;
-const SHIFTS = ["A", "B", "C", "D", "E"] as const;
+  { label: "Fibra Longa Klabin", value: "fibra longa klabin" },
+  { label: "Fibra Curta Klabin", value: "fibra curta klabin" },
+  { label: "Fibra Longa UPM PULP", value: "fibra longa upm pulp" },
+  { label: "Fibra Longa Mercer", value: "fibra longa mercer" },
+  { label: "Fibra Longa Rottneros", value: "fibra longa rottneros" },
+];
 
-const formSchema = z.object({
-  id: z.string(),
-  operator: z.enum(OPERATORS),
-  shift: z.enum(SHIFTS),
-  creation_date: z.string(),
-  creation_time: z.string(),
-  celluloseType: z.enum(CELULOSE_TYPE),
+const createFormSchema = z.object({
+  operator: z.string({ message: "Selecione um operador" }),
+  shift: z.string({ message: "Selecione um turno" }),
+  celuloseType: z.string({ message: "Selecione um tipo de celulose" }),
+  createdAt: z.string({ message: "Selecione a data e hora" }),
 });
 
-type FormFields = z.infer<typeof formSchema>;
+const updateFormSchema = z.object({
+  operator: z.string({ message: "Selecione um operador" }),
+  shift: z.string({ message: "Selecione um turno" }),
+  celuloseType: z.string({ message: "Selecione um tipo de celulose" }),
+  createdAt: z.string({ message: "Selecione a data e hora" }),
+});
+
+type CreateFormFields = z.infer<typeof createFormSchema>;
+type UpdateFormFields = z.infer<typeof updateFormSchema>;
 
 function Manual() {
-  const [open, setOpen] = useState(false);
-
-  // query ytils
+  // query utils
   const queryClient = useQueryClient();
   const {
     data: getLatestData,
@@ -72,51 +93,31 @@ function Manual() {
     GET_SUMMARY_KEY,
   ]);
 
-  // form utils
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<FormFields>();
-
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
-    if (!confirm("Tem certeza que deseja adicionar um novo registro?")) {
-      return;
-    }
-
-    const dateTimeString = `${data.creation_date} ${data.creation_time}:00`;
+  const handleCreate = (data: CreateFormFields) => {
+    const dateTimeString = generateDateTimeString();
 
     const inputData = {
-      material: data.celluloseType.toLowerCase(),
-      id: data.id,
-      average_weight: 3000,
+      material: data.celuloseType,
+      averageWeight: 3000,
       unit: "KG",
-      created_at: dateTimeString,
+      createdAt: dateTimeString,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      operator: data.operator.toLowerCase(),
+      operator: data.operator,
       shift: data.shift,
     };
 
     mutateCreateLoad(inputData);
   };
 
-  const onUpdate: SubmitHandler<FormFields> = (data) => {
-    if (!confirm("Tem certeza que deseja editar esse registro?")) {
-      return;
-    }
-    setOpen(false);
-
-    const dateTimeString = `${data.creation_date} ${data.creation_time}:00`;
-
+  const handleUpdate = (id: string, data: UpdateFormFields) => {
     const inputData = {
-      material: data.celluloseType.toLowerCase(),
-      id: data.id,
-      average_weight: 3000,
+      id: id,
+      material: data.celuloseType,
+      averageWeight: 3000,
       unit: "KG",
-      created_at: dateTimeString,
+      createdAt: data.createdAt,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      operator: data.operator.toLowerCase(),
+      operator: data.operator,
       shift: data.shift,
     };
 
@@ -125,131 +126,64 @@ function Manual() {
 
   return (
     <>
-      <main className="mx-auto flex min-h-screen max-w-7xl flex-col px-2">
-        <Header />
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <fieldset className="mb-4 flex flex-col">
-              <label htmlFor="operator" className="mb-2 text-xl font-medium">
-                Selecione o operador
-              </label>
-              <select
-                {...register("operator", {
-                  required: "Informe o operador antes de registrar carga",
-                })}
-                id="operator"
-                className="w-full max-w-fit rounded-lg border border-gray-500 bg-gray-200 p-2 focus:border-yellow-500 focus:ring-yellow-500"
-              >
-                <option value="">Operador</option>
-                {OPERATORS.map((data) => {
-                  return (
-                    <option key={data} value={data}>
-                      {data}
-                    </option>
-                  );
-                })}
-              </select>
-              {errors.operator && (
-                <span className="font-bold text-red-500">
-                  {errors.operator.message}
-                </span>
-              )}
-            </fieldset>
-            <fieldset className="flex flex-col">
-              <label htmlFor="shift" className="mb-2 text-xl font-medium">
-                Selecione o turno
-              </label>
-              <select
-                {...register("shift", {
-                  required: "Informe o turno antes de registrar a carga",
-                })}
-                id="shift"
-                className="w-full max-w-fit rounded-lg border border-gray-500 bg-gray-200 p-2 focus:border-yellow-500 focus:ring-yellow-500"
-              >
-                <option value="">Turno</option>
-                {SHIFTS.map((data) => {
-                  return (
-                    <option key={data} value={data}>
-                      Turno {data}
-                    </option>
-                  );
-                })}
-              </select>
-              {errors.shift && (
-                <span className="font-bold text-red-500">
-                  {errors.shift.message}
-                </span>
-              )}
-            </fieldset>
-          </div>
-          <fieldset className="mt-2">
-            <div className="flex max-w-fit flex-col gap-x-8 sm:flex-row sm:items-end">
-              <div>
-                <label
-                  htmlFor="recordDate"
-                  className="mb-2 block text-xl font-medium"
-                >
-                  Data/Hora da carga
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    {...register("creation_date")}
-                    id="recordDate"
-                    type="date"
-                    className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 focus:border-yellow-500 focus:ring-yellow-500"
-                  />
-                  <input
-                    {...register("creation_time")}
-                    id="recordDate"
-                    type="time"
-                    className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 focus:border-yellow-500 focus:ring-yellow-500"
-                  />
-                </div>
-              </div>
-            </div>
-          </fieldset>
-          <fieldset className="mt-4 rounded-sm border border-gray-500 px-6 py-4">
-            <legend className="text-xl">Selecione o tipo de celulose</legend>
-            <div className="grid grid-cols-3 justify-between gap-2">
-              {CELULOSE_TYPE.map((data) => {
-                return (
-                  <div key={data} className="flex items-center gap-1">
-                    <input
-                      {...register("celluloseType", {
-                        required:
-                          "informe o tipo de celulose antes de registrar a carga",
-                      })}
-                      type="radio"
-                      name="celluloseType"
-                      id={data}
-                      value={data}
-                    />
-                    <label htmlFor={data}>{data}</label>
-                  </div>
-                );
-              })}
-            </div>
-          </fieldset>
-          {errors.celluloseType && (
-            <span className="block font-bold text-red-500">
-              {errors.celluloseType.message}
-            </span>
-          )}
-          <button
-            type="submit"
-            className="mb-6 me-2 mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300"
-          >
-            Registrar carga
-          </button>
-        </form>
+      <main className="text mx-auto flex min-h-screen max-w-7xl flex-col px-2">
+        <Navbar />
+        <DynamicForm
+          styles="space-y-8 my-6"
+          schema={createFormSchema}
+          submitText="Registrar"
+          fields={[
+            {
+              name: "operator",
+              label: "Operador",
+              placeholder: "Selecionar operador",
+              type: "customSelect",
+              options: OPERATORS,
+              width: "w-[400px]",
+            },
+            {
+              name: "shift",
+              label: "Turno",
+              placeholder: "Selecionar turno",
+              type: "customSelect",
+              options: SHIFTS,
+              width: "w-[200px]",
+            },
+            {
+              name: "celuloseType",
+              label: "Celulose",
+              description: "Selecionar tipo de celulose",
+              type: "radio",
+              options: CELULOSE_TYPE,
+            },
+            {
+              name: "createdAt",
+              label: "Data e Hora",
+              type: "datetime",
+            },
+          ]}
+          onSubmit={async (formValues: CreateFormFields) => {
+            const ok = await Confirm({
+              title: "Confirmar registro",
+              description: "Tem certeza que deseja adicionar um novo registro?",
+              confirmText: "Sim, registrar",
+              cancelText: "Cancelar",
+              buttonVariant: "default",
+            });
+
+            if (ok) {
+              handleCreate(formValues);
+            }
+          }}
+        />
         {isErrorGetLatest ? (
-          <span className="text-red-500">
+          <span className="text-destructive">
             Erro os buscar as informações de consumo.
             <br /> Erro: {errorGetLatest.message}
           </span>
         ) : (
-          <table className="my-6 block overflow-x-auto md:table">
-            <caption className="mb-2 text-left">
+          <div>
+            <div className="mb-2 text-left">
               <p>
                 Total do dia
                 <span className="font-bold">
@@ -259,19 +193,19 @@ function Manual() {
               </p>
               <div className="flex justify-between">
                 <div>
-                  {getSummaryData?.map((summary) => {
+                  {getSummaryData?.map((loads) => {
                     return (
-                      <span key={summary.material} className="block capitalize">
-                        {summary.material}:{" "}
+                      <span key={loads.material} className="block capitalize">
+                        {loads.material}:{" "}
                         <span className="font-bold">
-                          {summary.total_weight?.toLocaleString()} KG
+                          {loads.totalWeight?.toLocaleString()} KG
                         </span>
                       </span>
                     );
                   })}
                 </div>
-                <button
-                  className="hover:cursor-pointer p-1 bg-black max-w-fit max-h-fit rounded-full"
+                <Button
+                  className="rounded-full hover:cursor-pointer"
                   onClick={() => {
                     queryClient.invalidateQueries({
                       queryKey: [GET_LATEST_KEY],
@@ -281,246 +215,116 @@ function Manual() {
                     });
                   }}
                 >
-                  <svg
-                    className="text-white w-6 h-6"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
-                    />
-                  </svg>
-                </button>
+                  <RefreshCw />
+                </Button>
               </div>
-            </caption>
-            <thead>
-              <tr>
-                <th>Material</th>
-                <th>Peso Medio</th>
-                <th>Data</th>
-                <th>Hora</th>
-                <th>Operador</th>
-                <th>Turno</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {getLatestData?.map((loads) => {
-                return (
-                  <tr className="capitalize even:bg-[#e5e7eb]" key={loads.id}>
-                    <td>{loads.material}</td>
-                    <td>
-                      {loads.average_weight} {loads.unit}
-                    </td>
-                    <td>{ISODateToLocal(loads.created_at)}</td>
-                    <td>{ISOTimeToLocal(loads.created_at)}</td>
-                    <td>{loads.operator}</td>
-                    <td>{loads.shift}</td>
-                    <td>
-                      <Modal open={open} onOpenChange={setOpen}>
-                        <Modal.Button
-                          onClick={() => {
-                            setValue("id", loads.id);
-                          }}
-                        >
-                          <svg
-                            className="w-6 h-6 text-black hover:cursor-pointer"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
-                            />
-                          </svg>
-                        </Modal.Button>
+            </div>
+            <SimpleTable<Load>
+              headers={[
+                "Material",
+                "Peso Médio",
+                "Data",
+                "Hora",
+                "Operador",
+                "Turno",
+                "Editar",
+                "Remover",
+              ]}
+              renderRow={(loads) => (
+                <TableRow key={loads.id} className="capitalize">
+                  <TableCell>{loads.material}</TableCell>
+                  <TableCell>
+                    {loads.averageWeight} {loads.unit}
+                  </TableCell>
+                  <TableCell>{ISODateToLocal(loads.createdAt)}</TableCell>
+                  <TableCell>{ISOTimeToLocal(loads.createdAt)}</TableCell>
+                  <TableCell>{loads.operator}</TableCell>
+                  <TableCell>{loads.shift}</TableCell>
+                  <TableCell>
+                    <EditDialog
+                      title="Alteração de registro"
+                      description="Preencha as informações a serem alteradas"
+                      triggerButton={
+                        <SquarePen className="hover:cursor-pointer" />
+                      }
+                    >
+                      <DynamicForm
+                        styles="space-y-8"
+                        schema={updateFormSchema}
+                        submitText="Alterar"
+                        fields={[
+                          {
+                            name: "operator",
+                            label: "Operador",
+                            placeholder: "Selecionar operador",
+                            type: "customSelect",
+                            options: OPERATORS,
+                            width: "w-[400px]",
+                          },
+                          {
+                            name: "shift",
+                            label: "Turno",
+                            placeholder: "Selecionar turno",
+                            type: "customSelect",
+                            options: SHIFTS,
+                            width: "w-[200px]",
+                          },
+                          {
+                            name: "celuloseType",
+                            label: "Celulose",
+                            description: "Selecionar tipo de celulose",
+                            type: "radio",
+                            options: CELULOSE_TYPE,
+                          },
+                          {
+                            name: "createdAt",
+                            label: "Data e Hora",
+                            type: "datetime",
+                          },
+                        ]}
+                        onSubmit={async (formValues: UpdateFormFields) => {
+                          const ok = await Confirm({
+                            title: "Confirmar alteração",
+                            description:
+                              "Você está prestes a alterar este registro. Após a alteração, não será possível desfazer.",
+                            confirmText: "Sim, alterar",
+                            cancelText: "Cancelar",
+                            buttonVariant: "default",
+                          });
 
-                        <Modal.Content title="Editar Registro">
-                          <form onSubmit={handleSubmit(onUpdate)}>
-                            <div className="mb-4">
-                              <fieldset className="mb-4 flex flex-col">
-                                <label
-                                  htmlFor="operator"
-                                  className="mb-2 text-xl font-medium"
-                                >
-                                  Selecione o operador
-                                </label>
-                                <select
-                                  {...register("operator", {
-                                    required:
-                                      "Informe o operador antes de registrar carga",
-                                  })}
-                                  id="operator"
-                                  className="w-full max-w-fit rounded-lg border border-gray-500 bg-gray-200 p-2 focus:border-yellow-500 focus:ring-yellow-500"
-                                >
-                                  <option value="">Operador</option>
-                                  {OPERATORS.map((data) => {
-                                    return (
-                                      <option key={data} value={data}>
-                                        {data}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
-                                {errors.operator && (
-                                  <span className="font-bold text-red-500">
-                                    {errors.operator.message}
-                                  </span>
-                                )}
-                              </fieldset>
-                              <fieldset className="flex flex-col">
-                                <label
-                                  htmlFor="shift"
-                                  className="mb-2 text-xl font-medium"
-                                >
-                                  Selecione o turno
-                                </label>
-                                <select
-                                  {...register("shift", {
-                                    required:
-                                      "Informe o turno antes de registrar a carga",
-                                  })}
-                                  id="shift"
-                                  className="w-full max-w-fit rounded-lg border border-gray-500 bg-gray-200 p-2 focus:border-yellow-500 focus:ring-yellow-500"
-                                >
-                                  <option value="">Turno</option>
-                                  {SHIFTS.map((data) => {
-                                    return (
-                                      <option key={data} value={data}>
-                                        Turno {data}
-                                      </option>
-                                    );
-                                  })}
-                                </select>
-                                {errors.shift && (
-                                  <span className="font-bold text-red-500">
-                                    {errors.shift.message}
-                                  </span>
-                                )}
-                              </fieldset>
-                            </div>
-                            <fieldset className="mt-2">
-                              <div className="flex max-w-fit flex-col gap-x-8 sm:flex-row sm:items-end">
-                                <div>
-                                  <label
-                                    htmlFor="recordDate"
-                                    className="mb-2 block text-xl font-medium"
-                                  >
-                                    Data/Hora da carga
-                                  </label>
-                                  <div className="flex gap-2">
-                                    <input
-                                      {...register("creation_date")}
-                                      id="recordDate"
-                                      type="date"
-                                      className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 focus:border-yellow-500 focus:ring-yellow-500"
-                                    />
-                                    <input
-                                      {...register("creation_time")}
-                                      id="recordDate"
-                                      type="time"
-                                      className="block w-full rounded-lg border border-gray-500 bg-gray-200 px-4 py-2 focus:border-yellow-500 focus:ring-yellow-500"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </fieldset>
-                            <fieldset className="mt-4 rounded-sm border border-gray-500 px-6 py-4">
-                              <legend className="text-xl">
-                                Selecione o tipo de celulose
-                              </legend>
-                              <div className="grid grid-cols-3 justify-between gap-2">
-                                {CELULOSE_TYPE.map((data) => {
-                                  return (
-                                    <div
-                                      key={data}
-                                      className="flex items-center gap-1"
-                                    >
-                                      <input
-                                        {...register("celluloseType", {
-                                          required:
-                                            "informe o tipo de celulose antes de registrar a carga",
-                                        })}
-                                        type="radio"
-                                        name="celluloseType"
-                                        id={data}
-                                        value={data}
-                                      />
-                                      <label htmlFor={data}>{data}</label>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </fieldset>
-                            {errors.celluloseType && (
-                              <span className="block font-bold text-red-500">
-                                {errors.celluloseType.message}
-                              </span>
-                            )}
-                            <button
-                              type="submit"
-                              className="mb-6 me-2 mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-medium text-white hover:bg-green-800 focus:outline-hidden focus:ring-2 focus:ring-yellow-300"
-                            >
-                              Salvar
-                            </button>
-                          </form>
-                        </Modal.Content>
-                      </Modal>
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          if (
-                            !confirm(
-                              "Tem certeza que deseja remover este registro?"
-                            )
-                          ) {
-                            return;
+                          if (ok) {
+                            handleUpdate(loads.id, formValues);
                           }
-                          mutateDeleteLoad({ id: loads.id });
                         }}
-                        className="hover:cursor-pointer"
-                      >
-                        <svg
-                          className="h-6 w-6 text-red-600"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-                          />
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      />
+                    </EditDialog>
+                  </TableCell>
+                  <TableCell>
+                    <button
+                      onClick={async () => {
+                        const ok = await Confirm({
+                          title: "Confirmar exclusão",
+                          description:
+                            "Tem certeza de que deseja remover este registro? Essa ação não poderá ser desfeita e apagará permanentemente as informações do sistema.",
+                          confirmText: "Sim, remover",
+                          cancelText: "Cancelar",
+                          buttonVariant: "destructive",
+                        });
+
+                        if (ok) {
+                          mutateDeleteLoad({ id: loads.id });
+                        }
+                      }}
+                      className="hover:cursor-pointer"
+                    >
+                      <Trash2 className="text-destructive" />
+                    </button>
+                  </TableCell>
+                </TableRow>
+              )}
+              values={getLatestData}
+            />
+          </div>
         )}
       </main>
     </>
