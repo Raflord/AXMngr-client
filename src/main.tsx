@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import ReactDOM from "react-dom/client";
+import { Toaster } from "sonner";
 import { ConfirmDialog } from "./components/ConfirmDialog";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { routeTree } from "./routeTree.gen";
@@ -36,6 +37,7 @@ if (!rootElement.innerHTML) {
       <ThemeProvider>
         <RouterProvider router={router} />
         <ConfirmDialog />
+        <Toaster />
       </ThemeProvider>
     </QueryClientProvider>
   );

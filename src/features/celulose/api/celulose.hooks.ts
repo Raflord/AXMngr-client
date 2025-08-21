@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   InputData,
   LoadFiltered,
@@ -59,14 +60,18 @@ export function useCreateLoad(invalidateKey: string[]) {
       return await createLoad(inputData);
     },
     onSuccess: () => {
+      toast.success("Carga adicionada com sucesso.", {
+        position: "top-center",
+      });
       invalidateKey.map((key) => {
         void queryClient.invalidateQueries({ queryKey: [key] });
       });
     },
     onError: (error) => {
-      alert(
-        `Erro ao registrar carga! Por favor tente novamente.\nErro: ${error.message}`
-      );
+      toast.error("Erro ao registrar carga! Por favor tente novamente.", {
+        description: `Erro: ${error.message}`,
+        position: "top-center",
+      });
     },
   });
 }
@@ -79,14 +84,18 @@ export function useUpdateLoad(invalidateKey: string[]) {
       return await updateLoad(inputData);
     },
     onSuccess: () => {
+      toast.success("Carga modificada com sucesso.", {
+        position: "top-center",
+      });
       invalidateKey.map((key) => {
         void queryClient.invalidateQueries({ queryKey: [key] });
       });
     },
     onError: (error) => {
-      alert(
-        `Erro ao editar carga! Por favor tente novamente.\nErro: ${error.message}`
-      );
+      toast.error("Erro ao modificar carga! Por favor tente novamente.", {
+        description: `Erro: ${error.message}`,
+        position: "top-center",
+      });
     },
   });
 }
@@ -99,14 +108,18 @@ export function useDeleteLoad(invalidateKey: string[]) {
       return await deleteLoad(inputData);
     },
     onSuccess: () => {
+      toast.success("Carga removida com sucesso.", {
+        position: "top-center",
+      });
       invalidateKey.map((key) => {
         void queryClient.invalidateQueries({ queryKey: [key] });
       });
     },
     onError: (error) => {
-      alert(
-        `Erro ao remover carga! Por favor tente novamente.\nErro: ${error.message}`
-      );
+      toast.error("Erro ao remover carga! Por favor tente novamente.", {
+        description: `Erro: ${error.message}`,
+        position: "top-center",
+      });
     },
   });
 }
