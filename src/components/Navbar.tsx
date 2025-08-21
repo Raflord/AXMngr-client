@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { BookOpenIcon, InfoIcon, LifeBuoyIcon } from "lucide-react";
-import AlmoxManagerLogo from "./../assets/almox-manager-logo.png";
+import AXMngrLogo from "./../assets/axmngr-logo.png";
 import { ThemeToggle } from "./ThemeToggle";
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -165,8 +165,8 @@ export function Navbar() {
           <div className="flex items-center gap-6">
             <a href="/" className="text-primary hover:text-primary/90">
               <img
-                src={AlmoxManagerLogo}
-                alt="AlmoxManager Logo"
+                src={AXMngrLogo}
+                alt="AXMngr Logo"
                 className="max-h-12 max-w-12"
                 loading="lazy"
               />

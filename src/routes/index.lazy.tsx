@@ -1,5 +1,5 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import AlmoxManagerLogo from "./../assets/almox-manager-logo.png";
+import AXMngrLogo from "./../assets/axmngr-logo.png";
 
 function Index() {
   return (
@@ -7,12 +7,12 @@ function Index() {
       <main className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-gray-100 to-gray-300">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <img
-            src={AlmoxManagerLogo}
+            src={AXMngrLogo}
             alt="Logo BO Paper"
-            className="max-h-sm max-w-sm"
+            className="max-h-60 max-w-60"
           />
           <h1 className="text-5xl font-extrabold tracking-tight text-gray-800 sm:text-[5rem]">
-            Almox Manager
+            AXMngr
           </h1>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-8">
             <Link
