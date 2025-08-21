@@ -27,22 +27,19 @@ function Index() {
             </Link>
             <Link
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-black/5 p-4 text-black hover:bg-black/10"
-              to="/celulose/relatorio"
-            >
-              <h3 className="text-2xl font-bold">Relatórios →</h3>
-              <div className="text-lg">
-                Extração de relatórios detalhados do consumo registrado no
-                desagregador.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-black/5 p-4 text-black hover:bg-black/10"
               to="/insumos"
             >
               <h3 className="text-2xl font-bold">Insumos →</h3>
               <div className="text-lg">
                 Controle de lotes e vecimentos de insumos do almoxarifado.
               </div>
+            </Link>
+            <Link
+              className="flex max-w-xs flex-col gap-4 rounded-xl bg-black/5 p-4 text-black hover:bg-black/10"
+              to="/madeira"
+            >
+              <h3 className="text-2xl font-bold">Madeira →</h3>
+              <div className="text-lg">Contole de consumo de madeira</div>
             </Link>
           </div>
         </div>
