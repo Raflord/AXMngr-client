@@ -29,7 +29,7 @@ const inputData = z.object({
 const loadFiltered = z.object({
   material: z.string().nullable(),
   firstDate: z.string().nullable(),
-  seccondDate: z.string().nullable(),
+  secondDate: z.string().nullable(),
 });
 
 export type Load = z.infer<typeof load>;

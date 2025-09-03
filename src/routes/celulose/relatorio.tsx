@@ -5,9 +5,10 @@ import { Navbar } from "@/components/Navbar";
 import { SimpleTable } from "@/components/SimpleTable";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Download, LoaderCircle, SquarePen, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { utils, writeFile } from "xlsx";
 import { z } from "zod";
 import {
@@ -53,7 +54,7 @@ const CELULOSE_TYPE = [
 const searchFormSchema = z.object({
   celuloseType: z.string().optional(),
   firstDate: z.string().optional(),
-  seccondDate: z.string().optional(),
+  secondDate: z.string().optional(),
 });
 
 const updateFormSchema = z.object({
@@ -85,11 +86,11 @@ function Relatorio() {
     const inputData: LoadFiltered = {
       material: "",
       firstDate: null,
-      seccondDate: null,
+      secondDate: null,
     };
     if (data.celuloseType) inputData.material = data.celuloseType;
     if (data.firstDate) inputData.firstDate = data.firstDate;
-    if (data.seccondDate) inputData.seccondDate = data.seccondDate;
+    if (data.secondDate) inputData.secondDate = data.secondDate;
     if (data.celuloseType === "all") {
       inputData.material = "";
     }
@@ -135,7 +136,7 @@ function Relatorio() {
               type: "date",
             },
             {
-              name: "seccondDate",
+              name: "secondDate",
               label: "Data final",
               type: "date",
             },
@@ -180,10 +181,20 @@ function Relatorio() {
                 };
               });
 
-              const worksheet = utils.json_to_sheet(formatedData);
-              const workbook = utils.book_new();
-              utils.book_append_sheet(workbook, worksheet);
-              writeFile(workbook, "export.xlsx", { compression: true });
+              try {
+                const worksheet = utils.json_to_sheet(formatedData);
+                const workbook = utils.book_new();
+                utils.book_append_sheet(workbook, worksheet);
+                writeFile(workbook, "export.xlsx", { compression: true });
+              } catch (error) {
+                toast.error(
+                  "Erro no download do arquivo! Por favor tente novamente.",
+                  {
+                    description: `Erro: ${error}`,
+                    position: "top-center",
+                  }
+                );
+              }
             }}
             className="max-y-fit max-w-fit rounded-full"
           >
@@ -304,6 +315,6 @@ function Relatorio() {
   );
 }
 
-export const Route = createLazyFileRoute("/celulose/relatorio")({
+export const Route = createFileRoute("/celulose/relatorio")({
   component: Relatorio,
 });

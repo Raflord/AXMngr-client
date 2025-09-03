@@ -43,7 +43,7 @@ export const createLoad = async (inputData: InputData): Promise<InputData> => {
 };
 
 export const updateLoad = async (inputData: InputData): Promise<InputData> => {
-  const response = await axios.put(`${ENDPOINT}/${inputData.id}`, inputData);
+  const response = await axios.patch(`${ENDPOINT}/${inputData.id}`, inputData);
 
   return response.data;
 };

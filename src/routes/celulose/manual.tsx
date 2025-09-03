@@ -6,7 +6,7 @@ import { SimpleTable } from "@/components/SimpleTable";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useQueryClient } from "@tanstack/react-query";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { RefreshCw, SquarePen, Trash2 } from "lucide-react";
 import { z } from "zod";
 import {
@@ -331,6 +331,6 @@ function Manual() {
   );
 }
 
-export const Route = createLazyFileRoute("/celulose/manual")({
+export const Route = createFileRoute("/celulose/manual")({
   component: Manual,
 });

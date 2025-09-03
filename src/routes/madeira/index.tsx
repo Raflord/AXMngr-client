@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/Navbar";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 function RouteComponent() {
   return (
@@ -12,6 +12,6 @@ function RouteComponent() {
   );
 }
 
-export const Route = createLazyFileRoute("/madeira/")({
+export const Route = createFileRoute("/madeira/")({
   component: RouteComponent,
 });
