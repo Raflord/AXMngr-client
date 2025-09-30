@@ -105,7 +105,6 @@ function Relatorio() {
       averageWeight: 3000,
       unit: "KG",
       createdAt: data.createdAt,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       operator: data.operator,
       shift: data.shift,
     };

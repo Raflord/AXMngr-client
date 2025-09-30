@@ -21,7 +21,6 @@ const inputData = z.object({
   material: z.string(),
   averageWeight: z.number(),
   createdAt: z.string(),
-  timezone: z.string(),
   operator: z.string(),
   shift: z.string(),
 });

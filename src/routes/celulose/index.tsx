@@ -100,7 +100,6 @@ function Celulose() {
       averageWeight: 3000,
       unit: "KG",
       createdAt: dateTimeString,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       operator: data.operator,
       shift: data.shift,
     };
@@ -115,7 +114,6 @@ function Celulose() {
       averageWeight: 3000,
       unit: "KG",
       createdAt: data.createdAt,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       operator: data.operator,
       shift: data.shift,
     };
