@@ -1,3 +1,4 @@
+import { BookOpenIcon, InfoIcon, LifeBuoyIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -13,7 +14,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { BookOpenIcon, InfoIcon, LifeBuoyIcon } from "lucide-react";
 import AXMngrLogo from "./../assets/axmngr-logo.png";
 import { ThemeToggle } from "./ThemeToggle";
 

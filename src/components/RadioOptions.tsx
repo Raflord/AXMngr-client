@@ -1,3 +1,4 @@
+import { ControllerRenderProps } from "react-hook-form";
 import {
   FormControl,
   FormDescription,
@@ -6,7 +7,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ControllerRenderProps } from "react-hook-form";
 
 interface Option {
   label: string;

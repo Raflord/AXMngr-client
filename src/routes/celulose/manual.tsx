@@ -1,3 +1,7 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { RefreshCw, SquarePen, Trash2 } from "lucide-react";
+import { z } from "zod";
 import { Confirm } from "@/components/ConfirmDialog";
 import { DynamicForm } from "@/components/DynamicForm";
 import { EditDialog } from "@/components/EditDialog";
@@ -5,10 +9,6 @@ import { Navbar } from "@/components/Navbar";
 import { SimpleTable } from "@/components/SimpleTable";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { RefreshCw, SquarePen, Trash2 } from "lucide-react";
-import { z } from "zod";
 import {
   useCreateLoad,
   useDeleteLoad,

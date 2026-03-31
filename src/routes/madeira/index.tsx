@@ -1,5 +1,5 @@
-import { Navbar } from "@/components/Navbar";
 import { createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/Navbar";
 
 function RouteComponent() {
   return (

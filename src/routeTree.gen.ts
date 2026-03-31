@@ -54,9 +54,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/celulose/manual': typeof CeluloseManualRoute
   '/celulose/relatorio': typeof CeluloseRelatorioRoute
-  '/celulose': typeof CeluloseIndexRoute
-  '/insumos': typeof InsumosIndexRoute
-  '/madeira': typeof MadeiraIndexRoute
+  '/celulose/': typeof CeluloseIndexRoute
+  '/insumos/': typeof InsumosIndexRoute
+  '/madeira/': typeof MadeiraIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
@@ -81,9 +81,9 @@ export interface FileRouteTypes {
     | '/'
     | '/celulose/manual'
     | '/celulose/relatorio'
-    | '/celulose'
-    | '/insumos'
-    | '/madeira'
+    | '/celulose/'
+    | '/insumos/'
+    | '/madeira/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -123,21 +123,21 @@ declare module '@tanstack/react-router' {
     '/madeira/': {
       id: '/madeira/'
       path: '/madeira'
-      fullPath: '/madeira'
+      fullPath: '/madeira/'
       preLoaderRoute: typeof MadeiraIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insumos/': {
       id: '/insumos/'
       path: '/insumos'
-      fullPath: '/insumos'
+      fullPath: '/insumos/'
       preLoaderRoute: typeof InsumosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/celulose/': {
       id: '/celulose/'
       path: '/celulose'
-      fullPath: '/celulose'
+      fullPath: '/celulose/'
       preLoaderRoute: typeof CeluloseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }

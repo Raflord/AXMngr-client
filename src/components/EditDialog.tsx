@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,7 +7,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ReactNode } from "react";
 
 interface EditDialogProps {
   title: string;

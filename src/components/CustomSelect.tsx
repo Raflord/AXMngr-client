@@ -1,3 +1,4 @@
+import { ControllerRenderProps } from "react-hook-form";
 import {
   FormControl,
   FormItem,
@@ -12,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { ControllerRenderProps } from "react-hook-form";
 
 interface Option {
   label: string;
