@@ -11,11 +11,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as MadeiraIndexRouteImport } from './routes/madeira/index'
-import { Route as InsumosIndexRouteImport } from './routes/insumos/index'
 import { Route as CeluloseIndexRouteImport } from './routes/celulose/index'
-import { Route as CeluloseRelatorioRouteImport } from './routes/celulose/relatorio'
 import { Route as CeluloseManualRouteImport } from './routes/celulose/manual'
+import { Route as CeluloseRelatorioRouteImport } from './routes/celulose/relatorio'
+import { Route as InsumosIndexRouteImport } from './routes/insumos/index'
+import { Route as MadeiraIndexRouteImport } from './routes/madeira/index'
 
 const IndexLazyRouteImport = createFileRoute('/')()
 
@@ -24,19 +24,14 @@ const IndexLazyRoute = IndexLazyRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-const MadeiraIndexRoute = MadeiraIndexRouteImport.update({
-  id: '/madeira/',
-  path: '/madeira/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InsumosIndexRoute = InsumosIndexRouteImport.update({
-  id: '/insumos/',
-  path: '/insumos/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CeluloseIndexRoute = CeluloseIndexRouteImport.update({
   id: '/celulose/',
   path: '/celulose/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CeluloseManualRoute = CeluloseManualRouteImport.update({
+  id: '/celulose/manual',
+  path: '/celulose/manual',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CeluloseRelatorioRoute = CeluloseRelatorioRouteImport.update({
@@ -44,9 +39,14 @@ const CeluloseRelatorioRoute = CeluloseRelatorioRouteImport.update({
   path: '/celulose/relatorio',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CeluloseManualRoute = CeluloseManualRouteImport.update({
-  id: '/celulose/manual',
-  path: '/celulose/manual',
+const InsumosIndexRoute = InsumosIndexRouteImport.update({
+  id: '/insumos/',
+  path: '/insumos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MadeiraIndexRoute = MadeiraIndexRouteImport.update({
+  id: '/madeira/',
+  path: '/madeira/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -120,25 +120,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/madeira/': {
-      id: '/madeira/'
-      path: '/madeira'
-      fullPath: '/madeira/'
-      preLoaderRoute: typeof MadeiraIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/insumos/': {
-      id: '/insumos/'
-      path: '/insumos'
-      fullPath: '/insumos/'
-      preLoaderRoute: typeof InsumosIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/celulose/': {
       id: '/celulose/'
       path: '/celulose'
       fullPath: '/celulose/'
       preLoaderRoute: typeof CeluloseIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/celulose/manual': {
+      id: '/celulose/manual'
+      path: '/celulose/manual'
+      fullPath: '/celulose/manual'
+      preLoaderRoute: typeof CeluloseManualRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/celulose/relatorio': {
@@ -148,11 +141,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CeluloseRelatorioRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/celulose/manual': {
-      id: '/celulose/manual'
-      path: '/celulose/manual'
-      fullPath: '/celulose/manual'
-      preLoaderRoute: typeof CeluloseManualRouteImport
+    '/insumos/': {
+      id: '/insumos/'
+      path: '/insumos'
+      fullPath: '/insumos/'
+      preLoaderRoute: typeof InsumosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/madeira/': {
+      id: '/madeira/'
+      path: '/madeira'
+      fullPath: '/madeira/'
+      preLoaderRoute: typeof MadeiraIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
